@@ -1,0 +1,826 @@
+% !TeX encoding = UTF-8
+% !TeX root = presentation.tex
+
+
+\ifnotes{
+%\setbeameroption{show only notes}  % activates \nofiles
+\beamer@notestrue
+\beamer@notesnormalsfalse
+%\nofiles
+%
+%\beamer@frameswithnotesonlyfalse
+}%
+%
+%\usetheme[showpagenr=true]{upbcorporatedesign}%
+%\newcommand*{\beamer@slidetitle}[2]{}%
+%\definecolor{upbgray}{RGB}{197,196,196} % Gray as in the official PowerPoint template
+%
+%\setbeamercolor{background}{bg=upbgray!50}%
+%\setbeamercolor{headline}{bg=upbgray!50}%
+%\setbeamercolor{block body}{bg=upbgray}%
+%\setbeamercolor{block body alerted}{bg=upbgray}%
+%\setbeamercolor{block body example}{bg=upbgray}%
+%
+%\usetheme{default}
+%\usetheme{boxes}
+%\usetheme{Bergen}
+%\usetheme{Boadilla}
+%\usetheme{Madrid}
+%\usetheme{AnnArbor}
+%\usetheme{CambridgeUS}
+%\setbeamercolor{structure}{bg=lightgray,fg=darkred}%
+%\setbeamercolor{title}{bg=red,fg=white}
+%\setbeamercolor{title}{bg=lightgray!50}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Antibes}
+%\usetheme{JuanLesPins}
+%\usetheme{Montpellier}
+%\usetheme{Berkeley}
+%\usetheme{PaloAlto}
+%\usetheme{Goettingen}
+%\usetheme{Marburg}
+%\usetheme{Hannover}
+%\usetheme[compress]{Berlin}
+%\usetheme[compress]{Ilmenau}
+%\usetheme{Dresden}
+%\usetheme{Darmstadt}
+%\usetheme{Frankfurt}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Copenhagen}
+%\usetheme{Luebeck}
+%\usetheme{Malmoe}
+%\usetheme{Warsaw}
+%
+% Complete Color Themes
+%\usecolortheme{albatross}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{seagull}
+%\usecolortheme{wolverine}
+%\usecolortheme{beaver}
+%
+% Inner Color Themes
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%
+% Outer Color Themes
+%\usecolortheme{whale}
+%\usecolortheme{seahorse} % Hellblaut\"one
+%\usecolortheme{dolphin}
+%
+% Font Themes
+%\usefonttheme{default}
+%\usefonttheme{professionalfonts}
+%\usefonttheme{serif}
+%\usefonttheme{structurebold}
+%\usefonttheme{structureitalicserif}
+%\usefonttheme{structuresmallcapsserif}
+%
+%\setbeamercolor*{palette primary}{use=structure,fg=black,bg=structure.fg!10!white}
+%\setbeamercolor*{palette secondary}{use=structure,fg=white,bg=structure.fg!60!white}
+%\setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=structure.fg!90!white}
+%\setbeamercolor*{palette quaternary}{fg=white,bg=structure.fg!80!black}
+%\beamertemplateshadingbackground{white}{green!10!white}
+%\setbeamertemplate{background canvas}[vertical shading][top=white,middle=white,bottom=blue!10!white]
+%
+%\pgfpagesuselayout{rounded corners}[corner width=3mm]
+%\setbeamercovered{transparent}
+%\setbeamertemplate{navigation symbols}{}%
+\beamertemplatenavigationsymbolsempty
+%\setbeamertemplate{footline}[frame number]
+%\setbeamertemplate{footline}[text line]{\insertframenumber}
+
+\xdefinecolor{lblue}{rgb}{0.07 0.55 0.67}
+\xdefinecolor{item_color}{rgb}{0.07 0.55 0.67}
+\xdefinecolor{illustrationcolor}{RGB}{3 64 76}
+
+
+
+\xdefinecolor{textcolor}{RGB}{200 200 200}
+%\xdefinecolor{textcolor}{named}{white}
+%\xdefinecolor{accentcolor}{RGB}{0 123 151}
+%\xdefinecolor{accentcolor}{RGB}{5 134 162}
+\xdefinecolor{accentcolor}{named}{white}
+%\xdefinecolor{accentcolor}{RGB}{140 140 140}
+%\xdefinecolor{accentcolor}{named}{white}
+\xdefinecolor{papercolor}{named}{black}
+%\xdefinecolor{papercolor}{RGB}{10 10 10}
+\usefonttheme[]{structurebold}
+
+
+
+\setbeamercolor{background canvas}{bg=papercolor}
+
+
+
+
+
+\setbeamercolor{normal text}{fg=textcolor,bg=papercolor}
+\setbeamercolor{alerted text}{fg=red}
+\setbeamercolor{example text}{fg=green!50!black}
+
+\setbeamercolor{structure}{bg=papercolor,fg=accentcolor}
+
+\setbeamercolor{background canvas}{parent=normal text}
+\setbeamercolor{background}{parent=background canvas}
+
+\setbeamercolor{palette primary}{use=structure,fg=structure.fg}
+\setbeamercolor{palette secondary}{use=structure,fg=structure.fg!75!black}
+\setbeamercolor{palette tertiary}{use=structure,fg=structure.fg!50!black}
+\setbeamercolor{palette quaternary}{fg=textcolor}
+
+\setbeamercolor{palette sidebar primary}{use=normal text,fg=normal text.fg}
+\setbeamercolor{palette sidebar secondary}{use=structure,fg=structure.fg}
+\setbeamercolor{palette sidebar tertiary}{use=normal text,fg=normal text.fg}
+\setbeamercolor{palette sidebar quaternary}{use=structure,fg=structure.fg}
+
+\setbeamercolor{math text}{}
+\setbeamercolor{math text inlined}{parent=math text}
+\setbeamercolor{math text displayed}{parent=math text}
+
+\setbeamercolor{normal text in math text}{}
+
+\setbeamercolor{local structure}{parent=structure}
+
+\setbeamercolor{titlelike}{parent=structure}
+
+\setbeamercolor{title}{parent=titlelike,bg=}
+\setbeamercolor{title in head/foot}{parent=palette quaternary}
+\setbeamercolor{title in sidebar}{parent=palette sidebar quaternary}
+
+\setbeamercolor{subtitle}{parent=title}
+
+\setbeamercolor{author}{}
+\setbeamercolor{author in head/foot}{parent=palette primary}
+\setbeamercolor{author in sidebar}{use=palette sidebar tertiary,fg=palette sidebar tertiary.fg}
+
+\setbeamercolor{institute}{}
+\setbeamercolor{institute in head/foot}{parent=palette tertiary}
+\setbeamercolor{institute in sidebar}{use=palette sidebar tertiary,fg=palette sidebar tertiary.fg}
+
+\setbeamercolor{date}{}
+\setbeamercolor{date in head/foot}{parent=palette secondary}
+\setbeamercolor{date in sidebar}{use=palette sidebar tertiary,fg=palette sidebar tertiary.fg}
+
+\setbeamercolor{titlegraphic}{}
+
+\setbeamercolor{part name}{}
+\setbeamercolor{part title}{parent=titlelike}
+
+\setbeamercolor{section name}{}
+\setbeamercolor{section title}{parent=titlelike}
+
+\setbeamercolor{section in toc}{parent=structure}
+\setbeamercolor{section in toc shaded}{parent=section in toc}
+\setbeamercolor{section in head/foot}{parent=palette tertiary}
+\setbeamercolor{section in sidebar}{parent=palette sidebar secondary}
+\setbeamercolor{section in sidebar shaded}{use=section in sidebar,fg=section in sidebar.fg!40!bg}
+\setbeamercolor{section number projected}{parent=item projected}
+
+\setbeamercolor{subsection name}{}
+\setbeamercolor{subsection title}{parent=titlelike}
+
+\setbeamercolor{subsection in toc}{}
+\setbeamercolor{subsection in toc shaded}{parent=subsection in toc}
+\setbeamercolor{subsection in head/foot}{parent=palette secondary}
+\setbeamercolor{subsection in sidebar}{parent=palette sidebar primary}
+\setbeamercolor{subsection in sidebar shaded}{use=subsection in sidebar,fg=subsection in sidebar.fg!40!bg}
+\setbeamercolor{subsection number projected}{parent={subitem projected}}
+
+\setbeamercolor{subsubsection in toc}{parent=subsection in toc}
+\setbeamercolor{subsubsection in toc shaded}{parent=subsubsection in toc}
+\setbeamercolor{subsubsection in head/foot}{parent=subsection in head/foot}
+\setbeamercolor{subsubsection in sidebar}{parent=subsection in sidebar}
+\setbeamercolor{subsubsection in sidebar shaded}{parent=subsection in sidebar shaded}
+\setbeamercolor{subsubsection number projected}{parent=subsubitem projected}
+
+\setbeamercolor{headline}{}
+\setbeamercolor{footline}{}
+
+\setbeamercolor{sidebar}{}
+\setbeamercolor{sidebar left}{parent=sidebar}
+\setbeamercolor{sidebar right}{parent=sidebar}
+
+\setbeamercolor{logo}{parent=palette secondary}
+
+\setbeamercolor{frametitle}{parent=titlelike}
+\setbeamercolor{framesubtitle}{parent=frametitle}
+
+\setbeamercolor{frametitle right}{parent=frametitle}
+
+\setbeamercolor{caption}{}
+\setbeamercolor{caption name}{parent=structure}
+
+\setbeamercolor{button}{use=local structure,bg=local structure.fg!50!bg,fg=white}
+\setbeamercolor{button border}{use=button,fg=button.bg}
+\setbeamercolor{navigation symbols}{use=structure,fg=structure.fg!40!bg}
+\setbeamercolor{navigation symbols dimmed}{use=structure,fg=structure.fg!20!bg}
+\setbeamercolor{mini frame}{parent=section in head/foot}
+
+\setbeamercolor{block body}{bg=papercolor!90!white}
+\setbeamercolor{block body alerted}{}
+\setbeamercolor{block body example}{}
+\setbeamercolor{block title}{parent=structure,bg=papercolor!80!white}
+\setbeamercolor{block title alerted}{parent=alerted text}
+\setbeamercolor{block title example}{parent=example text}
+
+\setbeamercolor{item}{parent=local structure}
+\setbeamercolor{subitem}{parent=item}
+\setbeamercolor{subsubitem}{parent=subitem}
+
+\setbeamercolor{item projected}{parent=item,use=item,fg=white,bg=item.fg}
+\setbeamercolor{subitem projected}{parent=item projected}
+\setbeamercolor{subsubitem projected}{parent=subitem projected}
+
+\setbeamercolor{enumerate item}{parent=item}
+\setbeamercolor{enumerate subitem}{parent=subitem}
+\setbeamercolor{enumerate subsubitem}{parent=subsubitem}
+
+\setbeamercolor{itemize item}{parent=item}
+\setbeamercolor{itemize subitem}{parent=subitem}
+\setbeamercolor{itemize subsubitem}{parent=subsubitem}
+
+\setbeamercolor{itemize/enumerate body}{}
+\setbeamercolor{itemize/enumerate subbody}{}
+\setbeamercolor{itemize/enumerate subsubbody}{}
+
+\setbeamercolor{description item}{parent=item}
+
+\setbeamercolor{description body}{}
+
+\setbeamercolor{bibliography item}{parent=item}
+
+\setbeamercolor{bibliography entry author}{use=structure,fg=structure.fg}
+\setbeamercolor{bibliography entry title}{use=normal text,fg=normal text.fg}
+\setbeamercolor{bibliography entry location}{use=structure,fg=structure.fg!65!bg}
+\setbeamercolor{bibliography entry note}{use=structure,fg=structure.fg!65!bg}
+
+\setbeamercolor{separation line}{}
+
+\setbeamercolor{upper separation line head}{parent=separation line}
+\setbeamercolor{middle separation line head}{parent=separation line}
+\setbeamercolor{lower separation line head}{parent=separation line}
+
+\setbeamercolor{upper separation line foot}{parent=separation line}
+\setbeamercolor{middle separation line foot}{parent=separation line}
+\setbeamercolor{lower separation line foot}{parent=separation line}
+
+\setbeamercolor{abstract}{}
+\setbeamercolor{abstract title}{parent=structure}
+
+\setbeamercolor{verse}{}
+
+\setbeamercolor{quotation}{}
+\setbeamercolor{quote}{parent=quotation}
+
+\setbeamercolor{page number in head/foot}{}
+
+\setbeamercolor{qed symbol}{parent=structure}
+
+\setbeamercolor{note page}{bg=white!90!black, fg=black}
+\setbeamercolor{note title}{bg=white!80!black, fg=black}
+\setbeamercolor{note date}{parent=note title}
+
+
+
+\begin{comment}
+\setbeamercolor{background canvas}{bg=papercolor}
+\setbeamercolor*{structure}{fg=textcolor,bg=papercolor}
+\setbeamercolor{palette primary}{use={structure,normal text},fg=structure.fg,bg=normal text.bg!75!accentcolor}
+\setbeamercolor{palette secondary}{use={structure,normal text},fg=structure.fg,bg=normal text.bg!60!accentcolor}
+\setbeamercolor{palette tertiary}{use={structure,normal text},fg=structure.fg,bg=normal text.bg!45!accentcolor}
+\setbeamercolor{palette quaternary}{use={structure,normal text},fg=structure.fg,bg=normal text.bg!30!accentcolor}
+
+%\setbeamertemplate{background canvas}[vertical shading][bottom=black,top=black,middle=blue!50!black]
+%    \setbeamertemplate{background canvas}[vertical shading][bottom=black,top=black,middle=blue!50!black]
+%\setbeamertemplate{background canvas}{bg=papercolor}
+
+
+\setbeamersize{text margin left=2em,text margin right=2em}
+
+% \inserttitle on the \titlepage
+\setbeamercolor{title}{bg=papercolor,fg=accentcolor}
+
+
+
+
+\setbeamertemplate{blocks}[shadow=true]
+\setbeamercolor{block title}{bg=accentcolor,fg=white}
+\setbeamerfont{block title}{series=\bfseries}
+\setbeamercolor{block body}{bg=accentcolor!10}
+\setbeamercolor{block title example}{bg=darkgreen!80,fg=white}
+\setbeamercolor{block body example}{bg=green!10}
+\setbeamercolor{block title alerted}{bg=red,fg=white}
+\setbeamercolor{block body alerted}{bg=red!10}
+
+
+
+%\setbeamercolor{frametitle}{bg=lightgray!10,fg=lblue}
+\setbeamercolor{frametitle}{fg=accentcolor}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamerfont{framesubtitle}{series=\mdseries}
+\setbeamercolor{date in head/foot}{fg=accentcolor}
+
+\setbeamercolor{structure}{fg=accentcolor}
+%\usefonttheme[onlylarge]{structurebold}
+\setbeamerfont{section in toc}{series=\bfseries}
+\setbeamerfont{caption name}{series=\bfseries}
+\setbeamerfont{item}{series=\bfseries}
+\setbeamerfont{abstract title}{series=\bfseries}
+
+
+\setbeamertemplate{items}[square]
+\setbeamercolor{itemize item}{fg=accentcolor}
+\setbeamercolor{itemize subitem}{fg=accentcolor}
+\setbeamercolor{local structure}{fg=accentcolor}
+
+% ToC
+\setbeamertemplate{sections/subsections in toc}[square]
+
+
+\setbeamerfont{subsection in head/foot}{parent=section in head/foot}
+\setbeamercolor{section in head/foot}{fg=accentcolor}
+\setbeamercolor{subsection in head/foot}{fg=accentcolor}
+
+\end{comment}
+
+%\defbeamertemplate*{titlegraphic}{mytheme}
+%{
+%\includegraphics[height=8mm]{s/amd-black} 
+%}
+
+%\begin{comment}
+%\usebackgroundtemplate{\includegraphics[width=\paperwidth,height=\paperheight]{logos/amd-title}}
+\defbeamertemplate*{headline}{mytheme}
+{
+%\usebackgroundtemplate{\includegraphics[width=\paperwidth,height=\paperheight]{logos/amd-title}}
+%\includegraphics[width=\pagewidth,height=\pageheight]{logos/amd-title}
+  \leavevmode%
+  \hbox{%
+      \hspace*{\beamer@leftmargin}\begin{beamercolorbox}[wd=\textwidth,ht=2.5ex,left]{section in head/foot}%
+        {\usebeamerfont{section in head/foot}\insertsectionhead}%
+        \ifx\insertsubsectionhead\@empty%
+        \else%
+          {\usebeamerfont{subsection in head/foot}\usebeamercolor[fg]{subsection in head/foot}\hspace{0.5em}$\rightarrow$\hspace{0.5em}\insertsubsectionhead\strut\par}%
+        \fi%
+      \end{beamercolorbox}%
+  }%
+%  \vskip0pt%
+}
+%\end{comment}
+
+
+\defbeamertemplate*{frametitle}{mytheme}
+{%
+  \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
+  \@tempdima=\textwidth%
+%\advance\@tempdima by\beamer@leftmargin%
+%\advance\@tempdima by\beamer@rightmargin%
+%\vspace*{3mm}
+%\fbox{%
+  \begin{beamercolorbox}[wd=\the\@tempdima]{frametitle}%
+    \usebeamerfont{frametitle}%
+    %\vbox{}\vskip-1ex%
+    %\if@tempswa\else\csname beamer@fteleft\endcsname\fi%
+    \strut\insertframetitle\strut\par%
+    {%
+      \ifx\insertframesubtitle\@empty%
+      \else%
+      \vskip-0.5ex%
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\strut\par}%
+      \vskip-1.0ex%
+      \fi%
+    }%
+%   \vskip-1.5ex%
+    %\if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
+  \end{beamercolorbox}%
+%}%\vspace*{-1ex} %
+\vskip-1ex%
+\rule{\textwidth}{0.1pt}%
+%\vskip-1ex%
+}
+
+
+\def\insertpresentationendframe{\inserttotalframenumber}
+\g@addto@macro{\appendix}{\immediate\write\@auxout{\string\@writefile{nav}{\noexpand\headcommand{\noexpand\def\noexpand\insertpresentationendframe{\the\c@framenumber}}}}}
+
+\def\myinsertpresentationendpage{\insertdocumentendpage}
+\g@addto@macro{\appendix}{\immediate\write\@auxout{\string\@writefile{nav}{\noexpand\headcommand{\noexpand\def\noexpand\myinsertpresentationendpage{\the\c@page}}}}}
+
+
+\pgfdeclareimage[height=0.4cm]{amd-logo}{logos/amd-logo-black}
+\logo{\pgfuseimage{amd-logo}}
+%\logo{\includegraphics[height=0.4cm]{logos/amd-logo-black}}
+
+%\setbeamertemplate{sidebar right}[]
+%\setbeamertemplate{sidebar left}[]
+\defbeamertemplate*{sidebar right}{mytheme}{}
+%\defbeamertemplate*{sidebar left}{mytheme}{
+%  \vfill%
+%  {\hskip0.1cm\insertlogo}%
+%  \vskip2pt%
+%}
+
+%\begin{comment}
+\defbeamertemplate*{footline}{mytheme}
+{%
+%\beamer@tempcount=\insertpresentationendpage%
+\begin{tikzpicture}[overlay,remember picture]%
+\pgfmathparse{min(1.1,(\insertpagenumber-\insertpresentationstartpage)/(\myinsertpresentationendpage-1))}%
+\path[draw=gray] (page cs:x={\pgfmathresult},y=1) -- +(0,1mm);%
+\end{tikzpicture}%
+%
+  \leavevmode%
+  \hbox{%
+   \begin{beamercolorbox}[wd=0.5\paperwidth,ht=2.25ex,dp=1ex,left]{date in head/foot}%
+      \hspace*{3mm}%
+      \usebeamerfont{date in head/foot}\insertframenumber{} / \insertpresentationendframe{}%
+      \vspace*{1mm}%
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=0.5\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertlogo%
+    \hspace*{1mm}%
+  \end{beamercolorbox}%
+  }%
+  \vskip0pt%
+}%
+%\end{comment}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%\AtBeginSection[]
+%{
+%       \begin{frame}<beamer>{Outline}\slidetime{15}
+%               \tableofcontents[currentsection,hideothersubsections]
+%       \end{frame}
+%}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newenvironment*{sameheight}{%
+\begin{overprint}%
+\onslide<1->%
+}{%
+\end{overprint}%
+}%
+
+\newenvironment*{nospace}{%
+\begin{overlayarea}{0pt}{0pt}%
+}{%
+\end{overlayarea}%
+}%
+
+\renewenvironment<>{itemizeaction}{%
+\begin{actionenv}#1%
+\begin{itemize}%
+}{%
+\end{itemize}%
+\end{actionenv}%
+}%
+
+
+
+
+\gdef\beamer@transition{}
+\gdef\beamer@transtime{}
+\newcommand<>{\transition}[1][]{%
+	\only#2{%
+		\ifthenelse{\equal{#1}{}}{%
+			\gdef\beamer@transition{true}%
+			\gdef\beamer@transtime{}%
+		}{%
+			\gdef\beamer@transition{true}%
+			\gdef\beamer@transtime{#1}%
+		}%
+	}%
+	\ifthenelse{\equal{#1}{}}{%
+		\animate#2%
+	}{%
+		\transduration#2{#1}%
+	}%
+}%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Specify time used by frame
+
+\newcounter{dumin}
+\newcounter{dusec}
+\newcommand*\addtime[1]{%
+	\addtocounter{dusec}{#1}%
+	\whiledo {\value{dusec} > 59}{%
+		\stepcounter{dumin}%
+		\addtocounter{dusec}{-60}%
+	}%
+}
+\newcommand*\twoarabic[1]{\ifthenelse{\value{#1} > 9}{}{0}\arabic{#1}}
+\newcommand*\printdu{\arabic{dumin}:\twoarabic{dusec}}
+\newcommand*\pagetime[1]{%
+  \setcounter{dumin}{\value{dumin}}%
+  \setcounter{dusec}{\value{dusec}}%
+  \addtime{#1}%
+}
+\newcommand*\frametime[1]{%
+	\ifthenelse{\insertpagenumber=\insertframestartpage}{%
+		\pagetime{#1}%
+	}{}%
+}
+
+
+\gdef\beamer@frametime{0}
+\define@key{beamerframe}{time}{%
+  \gdef\beamer@frametime{#1}%
+  %\frametime{#1}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\gdef\beamer@transition{}%
+\newwrite\impressivefile
+\immediate\openout\impressivefile=\jobname.pdf.info.inc\relax
+\newcommand*{\writeimpressive}[1]{\immediate\write\impressivefile{#1}}
+%
+%\AtBeginDocument{
+\ifthenelse{\isundefined{\writeimpressive}}{}{%
+\begingroup
+\catcode`\#=12
+\writeimpressive{# -*- coding: iso-8859-1 -*-}
+\writeimpressive{}
+\endgroup
+}
+%}
+%
+\setbeamertemplate{background canvas}{%
+  \ifbeamercolorempty[bg]{background canvas}{}{\color{bg}\vrule width\paperwidth height\paperheight}%
+	% Write info file for impressive
+	\ifthenelse{\equal{\beamer@transition}{true}}{%
+		\writeimpressive{PageProps[\insertpagenumber] = dict.copy(AnimateSlide)}%
+			\ifthenelse{\equal{\beamer@transtime}{}}{%
+		}{%
+			\writeimpressive{PageProps[\insertpagenumber]['transtime'] = \beamer@transtime}%
+		}%
+	}{%
+		\ifthenelse{\equal{\insertframestartpage}{\insertframeendpage}}{%
+			\writeimpressive{PageProps[\insertpagenumber] = dict.copy(FrameSingleSlide)}%
+		}{%
+			\ifthenelse{\equal{\insertframestartpage}{\insertpagenumber}}{%
+				\writeimpressive{PageProps[\insertpagenumber] = dict.copy(FrameFirstSlide)}%
+			}{%
+				\ifthenelse{\equal{\insertframeendpage}{\insertpagenumber}}{%
+					\writeimpressive{PageProps[\insertpagenumber] = dict.copy(FrameLastSlide)}%
+				}{%
+					\writeimpressive{PageProps[\insertpagenumber] = dict.copy(FrameInnerSlide)}%
+				}%
+			}%
+		}%
+	}%
+%
+	\gdef\beamer@transition{}%
+%
+%	\writeimpressive{PageProps[\insertpagenumber]['title'] = ''}%
+	\ifdefined\insertframetitle%
+		\begingroup
+		\Hy@unicodefalse % Temporarily switching off unicode option, it prepends two nonsensical unicode characters
+		\pdfstringdef\myplainstring{\insertframetitle}
+		\Hy@unicodetrue % Unnecessary due to embedding into \begingroup???
+		\endgroup
+		\writeimpressive{PageProps[\insertpagenumber]['title'] = '\myplainstring'}%
+		\typeout{"\myplainstring"}
+	\fi%
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Generic slides
+
+\newcommand*{\Questions}{%
+\begin{frame}{\anyquestionstext}%
+        \begin{figure}%
+                \scalebox{5}{\Huge ?}%
+        \end{figure}%
+        \note[item]{Fragen?}%
+\end{frame}%
+}
+
+\newcommand{\folks}{
+\begin{frame}[plain,time=0]
+\begin{locate}{page cs:x=0.5,y=0.5}
+%\includegraphics[height=\paperheight,width=\paperwidth]{logos/folks}
+\includegraphics[width=0.4\paperwidth]{logos/amd-black}
+\end{locate}
+\end{frame}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcount\beamer@nextpagenumber
+
+% Mechanism to store some slide transition note and display it on the PREVIOUS slide
+\newcommand<>\slidenote[1]{%
+  \only#2{\note{\beamer@writethispagenote{#1}}}% Such that it is output somewhere if only notes are generated, without preview
+  \note#2[item]{#1}% So the note also appears on the regular notes page
+}
+
+\gdef\beamer@nextpagenote{}
+\newcommand*\beamer@slidenote[2]{%
+  \beamer@nextpagenumber=\c@page%
+  \advance\beamer@nextpagenumber by 1\relax%
+  \ifnum#1=\beamer@nextpagenumber%
+    \gdef\beamer@nextpagenote{#2}%
+  \fi%
+}
+
+\gdef\beamer@lastwrittenpagenote{}
+%\newcommand*\beamerwritethispagenote[1]{\beamer@writethispagenote{#1}}
+\newcommand*\beamer@writethispagenote[1]{%
+%	\ifthenelse{\equal{#1}{}}{}{
+		% Write slide notes
+%		\ifthenelse{\equal{{\insertpagenumber}}{\beamer@lastwrittenpagenote}}{}{
+\expandafter\addtocontents{nav}{\protect\headcommand{\protect\beamer@slidenote{\insertpagenumber}{#1}}}%
+%			\gdef\beamer@lastwrittenpagenote{\insertpagenumber}%
+%		}
+%	}%
+}
+
+
+% Mechnism to store the page title into the .nav file so we know the future page's title
+\gdef\beamer@nextpagetitle{}
+\newcommand*\beamer@slidetitle[2]{%
+  \beamer@nextpagenumber=\c@page%
+  \advance\beamer@nextpagenumber by 1\relax%
+  \ifnum#1=\beamer@nextpagenumber%
+    \gdef\beamer@nextpagetitle{#2}%
+  \fi%
+}
+%\newcommand*\beamerwritethispagetitle[1]{\beamer@writethispagetitle{#1}}
+\newcommand*\beamer@writethispagetitle[1]{%
+\expandafter\addtocontents{nav}{\protect\headcommand{\protect\beamer@slidetitle{\insertpagenumber}{#1}}}%
+%			\gdef\beamer@lastwrittenpagenote{\insertpagenumber}%
+}
+
+
+
+\newcommand*{\minislide}{
+	\node[inner sep=0,fit={(current page.north east) ($(current page.north east)!0.5!(current page.south west)$)},fill=black!5](previewback) {};
+	\node[anchor=north east,inner sep=0](preview) at (current page.north east) {\includegraphics[scale=0.5,page=\insertpagenumber]{presentation-final}};
+}
+\setbeamertemplate{note page}{%
+\frametime{\beamer@frametime}%
+\gdef\beamer@frametime{0}%
+\beamer@writethispagetitle{\insertframetitle}% Remember title for the next run
+%\begin{tikzpicture}[overlay]%
+%\node {\insertslideintonotes{1}};
+%\end{tikzpicture}%
+%
+% Beamer with notes activated uses \nofiles, making positioning by [remember picture] difficult
+% We position the cursor at the top left of the page such that with \nofiles and without \nofiles the relative position to the page is the same
+% Alternatively, state of \nofiles can be queries using \if@filesw
+\vskip\paperheight%
+\hskip-\Gm@lmargin%
+\insertslideintonotes{1}
+	\begin{tikzpicture}[remember picture,overlay]%
+		\minislide
+%		\node[anchor=north east,inner sep=0] (preview) at (current page.north east) {%
+%\insertslideintonotesat{0.5}
+%};
+		\path[fill=white] (current page.north west) rectangle (current page.south east -| preview.west);
+		\path[fill=white] (current page.north west |- preview.south) rectangle (current page.south east);
+%
+		\coordinate (right titles) at ($(preview.west) - (3mm,0)$);
+		\node[anchor=north west,text width=61mm] (title) at (current page.north west) {\insertshorttitle[width=61mm]};
+		\node[anchor=north west,text width=57mm] (section) at ($(title.south west) + (4mm,0)$) {\insertsection};
+		\node[anchor=north west,text width=53mm] (subsection) at ($(section.south west) + (4mm,0)$) {\insertsubsection};
+		\node[anchor=north west,text width=49mm] (frametitle) at ($(subsection.south west) + (4mm,0)$) {\textbf{\insertshortframetitle[width=49mm]}};
+%
+		\draw ($(title.south west) + (2mm,0)$) |- (section);
+		\draw ($(section.south west) + (2mm,0)$) |- (subsection);
+		\draw ($(subsection.south west) + (2mm,0)$) |- (frametitle);
+%
+		\node[anchor=north west,text width=\paperwidth] at (current page.west |- preview.south) {\insertnote};
+%
+		\node[anchor=south east] (duration) at (current page.south east) {\huge \printdu};
+		\node[anchor=south east] at (duration.north east) {(\insertframestartpage-\insertpagenumber-\insertframeendpage) \insertframenumber/\inserttotalframenumber };
+%
+		\ifthenelse{\equal{\beamer@nextpagenote}{}}{%
+			\ifthenelse{\equal{\beamer@nextpagetitle}{}}{%
+			}{%
+				\node[anchor=base west] at ($(current page.south west) + (0,1mm)$) {\Large \beamer@nextpagetitle};%
+			}%
+		}{%
+			\node[anchor=base west] at ($(current page.south west) + (0,1mm)$) {\Large \beamer@nextpagenote};%
+		}%
+	\end{tikzpicture}%
+	\gdef\beamer@nextpagenote{}%
+	\gdef\beamer@nextpagetitle{}%
+}
+
+
+
+\newcommand<>*\notiz[1]{\note#2[item]{#1}}
+
+
+
+
+
+% Overwrite internals !!!
+\def\beamer@framenotesbegin{
+  \gdef\beamer@noteitems{}%
+  \gdef\beamer@notes{\relax}% Avoid to be recognized as empty; Create a notes pages for EVERY page
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newcommand*\chapterslide[1]{
+\begin{frame}[time=5]%
+\slidenote{NEXT SECTION: #1}
+\begin{center}%
+\LARGE #1%
+\end{center}%
+\end{frame}%
+}
+
+
+% \mark[color]{text}
+\renewcommand<>*{\mark}[2][yellow]{%
+\ifmmode%
+  \alt#3{\fboxsep0pt{}\colorbox{#1}{\vphantom{$\mid_1^1$}$#2$}}{\vphantom{\mid_1^1}#2}%
+\else%
+  \alt#3{\fboxsep0pt{}\colorbox{#1}{\vphantom{$\mid_1^1$}#2}}{\vphantom{$\mid_1^1$}#2}%
+\fi%
+}
+
+
+\tikzset{onslide/.code args={<#1>#2}{%
+  \only<#1>{\pgfkeysalso{#2}}%
+}}
+
+\tikzset{alt/.code args={#1<#2>#3}{%
+  \alt<#2>{\pgfkeysalso{#3}}{\pgfkeysalso{#1}}%
+}}
+
+
+
+
+\newcommand*\itemremark[1]{\\{\footnotesize{}#1}}
+

@@ -1,0 +1,1568 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_US
+% !TeX root = presentation.tex
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{my}[2014/02/20 Meinersbur]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document encoding specified by master document
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Basic Packages, enhancing syntax
+
+%\RequirePackage{etex}       % Erh\"oht die Anzahl der Register auf 32768
+
+% This is required by \usetikzlibrary{hobby} which uses obsolete definitions
+%\usepackage{expl3}
+%\ExplSyntaxOn
+%\cs_set_eq:NN \fp_if_undefined:NTF \cs_if_free:NTF
+%\cs_set_eq:NN \fp_if_undefined:NT \cs_if_free:NT
+%\ExplSyntaxOff
+
+\RequirePackage{ifthen}		% \ifthenelse (deprecated by etoolbox?)
+\RequirePackage{ifpdf}
+\RequirePackage{ifdraft}
+\RequirePackage{ifluatex}
+%\RequirePackage{environ}	% \NewEnviron
+\RequirePackage{comment}	% \begin{comment}
+
+\RequirePackage[log-declarations=false]{xparse} % Warnung ausschalten: LaTeX info: "xparse/define-command" Defining document command \liningnums with arg. spec. 'm' on line 132.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load package options
+
+\RequirePackage{pgfopts}                                % \pgfkeys
+
+\newcommand*{\@my@elaboration}{false}
+\pgfkeys{/my/.cd,elaboration/.value forbidden,elaboration/.code=\renewcommand*{\@my@elaboration}{true}}
+
+\newcommand*{\@my@titlepage}{false}
+\pgfkeys{/my/.cd,titlepage/.value forbidden,titlepage/.code=\renewcommand*{\@my@titlepage}{true}}
+
+\newcommand*{\@my@presentation}{false}
+\pgfkeys{/my/.cd,presentation/.value forbidden,presentation/.code=\renewcommand*{\@my@presentation}{true}}
+
+\newcommand*{\@my@notes}{false}
+\pgfkeys{/my/.cd,notes/.value forbidden,notes/.code=\renewcommand*{\@my@notes}{true}}
+
+\pgfkeys{/my/language/.value required,/my/language/.default=english}
+\pgfkeys{/my/english/.style={language=american}}
+\pgfkeys{/my/german/.style={language=ngerman}}
+\pgfkeys{/my/french/.style={language=french}}
+\newcommand*{\@my@language}{english}
+\pgfkeys{/my/language/.code=\renewcommand*{\@my@language}{#1}} % For compatibility
+
+\newcommand*{\@my@institute}{}
+\pgfkeys{/my/.cd,institute/.code=\renewcommand*{\@my@institute}{#1}}
+
+\newcommand*{\@my@shortinstitute}{}
+\pgfkeys{/my/.cd,shortinstitute/.code=\renewcommand*{\@my@shortinstitute}{#1}}
+
+\newcommand*{\@my@subject}{}
+\pgfkeys{/my/.cd,subject/.code=\renewcommand*{\@my@subject}{#1}}
+
+\newcommand*{\@my@publishers}{}
+\pgfkeys{/my/.cd,publishers/.code=\renewcommand*{\@my@publishers}{#1}}
+
+\newcommand*{\@my@keywords}{}
+\pgfkeys{/my/.cd,keywords/.code=\renewcommand*{\@my@keywords}{#1}}
+
+\newcommand*\@my@purpose{}
+\pgfkeys{/my/.cd,purpose/.code=\renewcommand*\@my@purpose{#1}}
+\newcommand*\thepurpose{\@my@purpose}
+
+\ProcessPgfOptions{/my}
+
+\newcommand*{\ifelaboration}[1]{\ifthenelse{\equal{\@my@elaboration}{true}}{#1}{}}
+\newcommand*{\iftitlepage}[1]{\ifthenelse{\equal{\@my@titlepage}{true}}{#1}{}}
+\newcommand*{\ifpresentation}[1]{\ifthenelse{\equal{\@my@presentation}{true}}{#1}{}}
+\newcommand*{\ifnotes}[1]{\ifthenelse{\equal{\@my@notes}{true}}{#1}{}}
+\newcommand*{\ifnotnotes}[1]{\ifthenelse{\equal{\@my@notes}{true}}{}{#1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AMS (load before babel, autonum, microtype)
+
+\ifelaboration{
+\RequirePackage[fleqn]{amsmath}
+}
+\ifpresentation{
+\RequirePackage{amsmath}
+}
+\RequirePackage{amsfonts}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{amscd}
+%\RequirePackage{nath}	% Intelligentere formelsetzung, speziell Klammergroessen; load after amsmath, amssymb; Incompatible with amslatex, too old
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fonts
+
+\ifluatex
+\RequirePackage{fontspec}	% Babel not really supported; consider polyglossia
+\else
+\RequirePackage[T1]{fontenc}	% u.a. Trennung von W\"ortern mit Umlauten
+\fi
+
+                                                                                        % Schrift: Computer Modern (unbedingt cm-super installieren!)
+%\RequirePackage{lmodern}                       % Schrift: Latin Modern
+%\usepackage{ae}                                                % Schrift
+%\usepackage{times}                                     % Schrift: Times (veraltet, weil keine guten math-mode fonts)
+%\usepackage{mathpazo}                          % Schrift: Palatino (Roman und Formeln)
+%\usepackage{mathptmx}                          % Schrift: Times (Roman und Formeln)
+%\RequirePackage[scaled=0.92]{helvet}   % Schrift: Helvetica (Sans Serif)
+%\usepackage{avant}                                     & Schrift: Avant Garde (Sans Serif)
+%\usepackage{courier}                                   & Schrift: Courier (Typewriter)
+%\usepackage{chancery}                          & Schrift: Zapf Chancery (Roman)
+%\usepackage{bookman}                                   & Schrift: Bookman (Roman), Avant Garde (Sans Serif), Courier (Typewriter)
+%\usepackage{newcent}                                   & Schrift: New Century Schoolbook (Roman), Avant Garde (Sans Serif), Courier (Typewriter)
+%\usepackage{charter}                                   & Schrift: Charter (Roman)
+%\RequirePackage{agaramond}                     %Adobe Garamond als Standardschrift, Euler als Mathfont, T1 encoding und textcomp
+
+%\RequirePackage{textcomp}                               % TC-Schriften
+\RequirePackage{fix-cm}                                 % Stufenlose Schriftgr\"o{\ss}en
+%\RequirePackage{type1cm}                                % Arbitrary size font selection, obsoleted by fix-cm
+
+
+%\RequirePackage{pgfpages}                              % Kann hyperlinks st\"oren
+%\RequirePackage{pgfmath}
+
+%\RequirePackage{pxfonts}		% Aendert math-font??, ugly unter LuaLaTeX
+%\RequirePackage{pxfonts}			% change the font from Computer Modern to Adobe Palatino
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fonts II
+
+% Verbesserung des Textsatzes, nach fontenc,babel,amsmath laden
+\ifelaboration{
+\ifluatex
+\RequirePackage[tracking]{microtype}     % load after fontspec
+\else
+\RequirePackage[babel,kerning,spacing=nonfrench,tracking]{microtype} % load after babel
+\fi
+\DisableLigatures{encoding = *, family = tt*}
+%\DisableLigatures{encoding = *, family = * }
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+
+% Symbole
+\RequirePackage{marvosym}       % Konflikt mit wasysym
+\RequirePackage{wasysym}
+%\RequirePackage{stmaryrd}
+%\RequirePackage{mnsymbol}
+%\RequirePackage{wsuipa}
+
+
+% Mathe
+\RequirePackage{mathtools}		% \DeclarePairedDelimiter
+%\RequirePackage{mathrsfs}		% \math­scr
+\RequirePackage{dsfont}         % \mathds{}
+\RequirePackage{xfrac}
+
+\RequirePackage{xcolor}          % Farbiger Text; load  colortbl before mdwtab
+
+% Tabellen
+\RequirePackage{tabularx}               % tabularx-Umgebung (Passt sich an Seitenbreite an, erlaubt Fussnoten)
+%\RequirePackage{tabu}           		% Inkompatibel mit mdwtab
+\RequirePackage{mdwtab} 				% Footnotes in tables and better layouting
+\RequirePackage{booktabs}               % \cmidrule,\toprule,\bottomrule
+%\RequirePackage{longtable}
+\RequirePackage{multirow}
+
+
+% enumerate, itemize
+\ifelaboration{
+\RequirePackage{enumitem}               % besser als enumerate, label=\arabic benutzen
+}
+
+
+% Algorithmen, Listings
+\ifelaboration{
+\RequirePackage[ruled,vlined,resetcount,algochapter]{algorithm2e} 	% \begin{algorithm}
+\SetKw{KwContinue}{continue}
+\SetKw{KwLambda}{lambda}
+\SetKw{KwNot}{not}
+\SetKwInOut{KwInput}{Input}
+\SetKw{KwDownto}{downto}
+\SetKw{KwBreak}{break}
+}
+
+%\RequirePackage[final]{listings}							% \begin{lstlisting}
+%\lstset{
+%	tabsize=2,
+%	captionpos=b,
+%	basicstyle=\footnotesize\ttfamily,
+%}
+%%\lstloadlanguages{C,C++}
+%\lstset{language=C,
+%	commentstyle=\itshape\color{white!40!black},
+%	identifierstyle=\color{black},
+%    keywordstyle=\bfseries\color{blue!50!black},
+%    stringstyle=\ttfamily\color{red!50!black},
+%    showstringspaces=false,
+%    morekeywords={constexpr}
+%}
+
+
+
+\usepackage{minted}
+\usemintedstyle{borland}
+\ifelaboration{
+\newminted{c}{}
+\newminted{cpp}{}
+\newminted{sh}{}
+\newminted{text}{}
+\newmintinline{c}{style=bw}
+\newmintinline{cpp}{style=bw}
+\newmintinline{sh}{style=bw}
+\newmintinline{text}{style=bw}
+}
+\ifpresentation{
+\newminted{c}{style=bw}
+\newminted{cpp}{style=bw}
+\newminted{sh}{style=bw}
+\newminted{text}{style=bw}
+\newmintinline{c}{style=bw}
+\newmintinline{cpp}{style=bw}
+\newmintinline{sh}{style=bw}
+\newmintinline{text}{style=bw}
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+
+\ifelaboration{
+%\RequirePackage{scrpage2}       % Fuss- und Kopfzeilen von KOMA
+%\RequirePackage{scrhack}        % Warnung \float@addtolists ausschalten
+}
+
+
+
+\RequirePackage{perpage}
+\MakePerPage{footnote} % Footnote numbering per page
+
+
+\RequirePackage{parnotes}
+\RequirePackage{dcolumn} % D column type
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+%\usepackage{siunitx} % S column type
+
+
+
+\RequirePackage{xspace}         % \xspace, um das schlucken von Leerzeichen hinter commands zu verhindern
+\RequirePackage{stackrel}       % Fr \stackrel und \stackbin
+
+\RequirePackage{calc}
+
+%\RequirePackage{braket} 	% \Set{ | }
+\RequirePackage{mathtools,xparse}
+\NewDocumentCommand\set{sO{}m}{%
+  \begingroup%
+  \IfBooleanTF{#1}
+    {\setInn*{#3}}
+    {\setInn[#2]{#3}}%
+  \endgroup %
+}
+\DeclarePairedDelimiterX\setInn[1]\{\}{%
+  \activatebar%
+  #1%
+}
+\newcommand{\activatebar}{%
+  \begingroup\lccode`~=`| %
+  \lowercase{\endgroup\def~}{\;\delimsize\vert\;}%
+  \mathcode`|=\string"8000 %
+}
+\newcommand\Set{\set*}
+
+
+\RequirePackage{adjustbox} 	% \adjincludegraphics
+
+
+%\RequirePackage[normalem]{ulem}        % \underline mit Zeilenumbr\"uchen
+
+
+\RequirePackage{url}					 % Breaking of urls
+
+
+
+
+
+
+
+
+\RequirePackage{varwidth}               % \pbox[tb]{max width}{content}, variable Breite!
+%\RequirePackage{changepage}    % Um \textwidth und \linewidth pro paragraph zu ver\"andern
+%\RequirePackage{enumerate}             % \begin{enumerate}[(a)] [(1)], [(i)] etc
+
+\RequirePackage{relsize}
+
+%\ifdraft{
+%\RequirePackage[overlay,absolute,showboxes]{textpos}
+%}{
+%\RequirePackage[overlay,absolute]{textpos}
+%}
+%\setlength{\TPHorizModule}{\paperwidth} % also Prozentangabe relativ zur Seitenbreite
+%\setlength{\TPVertModule}{\paperheight} % also Prozentangabe relativ zur Seitenh\"ohe
+%\textblockorigin{0cm}{0cm}
+%\RequirePackage{svn-multi}
+
+
+
+\RequirePackage{minibox}	% \minibox{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hyperref
+
+\ifpdf % Ausgabeformat: PDF
+%\def\pgfsysdriver{pgfsys-pdftex.def}
+\ifelaboration{
+%\RequirePackage[final]{graphicx}
+%
+% load after float,natbib
+% load before algorithm, amsrefs, geometry, glossaries, cleveref
+% incompatible with varioref
+% (redefine \begin{equation} to \begin{gather}?)
+\RequirePackage{hyperref}
+}
+\pdfstringdefDisableCommands{\def\and{, }}
+\hypersetup{
+		unicode,
+        pdfsubject = {\@my@subject},
+        pdfkeywords = {\@my@keywords},
+        pdfcreator  = {},
+        pdfproducer = {},
+        draft = false,
+        final = true,
+%       breaklinks=true,        % Gibt an, ob Links umgebrochen werden d\"urfen.
+%       linktocpage=false,      % make page number, not text, be link on TOC, LOF and LOT
+        colorlinks=false,       % Links werden eingef\"arbt (Farben werden mit linkcolor, anchorcolor ... festgelegt)
+%       linkcolor=black,        % Farbe des verlinkten Textes, Dokument-interne Links
+%       citecolor=black,        % Farbe des verlinkten Textes, Links zum Literaturverzeichnis
+%       filecolor=black,        % Farbe des verlinkten Textes, Links auf lokale Dateien
+%       pagecolor=black,        % Farbe des verlinkten Textes, Links auf andere Seiten
+%       urlcolor=Farbe, % Farbe des verlinkten Textes, externe URLs
+%       anchorcolor=black, % Color for anchor text.
+%       menucolor=red,  %  Color for Acrobat menu items.
+%       frenchlinks=false,      % Links werden als smallcaps, anstatt farbig dargestellt.
+%       plainpages=false,
+%       pdfpagelabels=false,
+        pdfborder=0 0 0,
+        hypertexnames=false
+}
+\AtBeginDocument{
+	\hypersetup{
+		pdfauthor = {\insertauthor},
+		pdftitle = {\inserttitle},
+	}
+}
+
+\else   % Ausgabeformat: DVI
+%\RequirePackage{hyperref}       % F\"ur \autoref makro
+\RequirePackage[final]{graphicx}
+%\def\pgfsysdriver{pgfsys-dvi.def}
+%\def\pgfsysdriver{pgfsys-dvips.def}
+\fi
+%\def\pgfsysdriver{pgfsys-pdftex.def}
+%\def\pgfsysdriver{pgfsys-dvi.def}
+%\def\pgfsysdriver{pgfsys-dvips.def}
+%\def\pgfsysdriver{pgfsys-dvipdfm.def}
+%\def\pgfsysdriver{pgfsys-vtex.def}
+%\def\pgfsysdriver{pgfsys-textures.def}
+%\def\pgfsysdriver{pgfsys-tex4ht.def}
+%\def\pgfsysdriver{pgfsys-xetex.def}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TikZ/PGF
+
+\RequirePackage{tikz}         % Nach hyperref laden
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{decorations.text}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{fit}
+\usetikzlibrary{shadows.blur}
+\usetikzlibrary{arrows}    % Deprecated, use arrows.meta
+\usetikzlibrary{shapes}
+\usetikzlibrary{shadows}
+\usetikzlibrary{automata}
+\usetikzlibrary{positioning}
+\usetikzlibrary{petri}
+\usetikzlibrary{chains}
+\usetikzlibrary{fadings}
+\usetikzlibrary{matrix}
+\usetikzlibrary{patterns}
+\usetikzlibrary{mindmap}
+\usetikzlibrary{graphs}			% TikZ 3.0.0
+\ifluatex
+\usetikzlibrary{graphdrawing}	% TikZ 3.0.0
+\fi
+\usetikzlibrary{quotes}			% TikZ 3.0.0
+\usetikzlibrary{babel}          % Vor polyglossia
+\usetikzlibrary{hobby}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{bending}
+%\usetikzlibrary{overlay-beamer-styles} % aobs-tikz
+%\usetikzlibrary{matrix}
+%
+
+\ifluatex
+\usegdlibrary{trees}			% TikZ 3.0.0
+\usegdlibrary{layered}			% TikZ 3.0.0
+\usegdlibrary{force}			% TikZ 3.0.0
+\usegdlibrary{circular}			% TikZ 3.0.0
+\usegdlibrary{routing}			% TikZ 3.0.0
+\fi
+
+\pgfdeclarelayer{backbackbackground}
+\pgfdeclarelayer{backbackground}
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfdeclarelayer{foreforeground}
+\pgfsetlayers{backbackbackground,backbackground,background,main,foreground,foreforeground}
+\tikzset{>={Stealth[round,flex,length=5pt 4.5 0.8]}} % Standard latex arrow tips are way too small
+\tikzset{tight/.style={minimum width=0pt,minimum height=0pt,inner sep=0pt,outer sep=0pt}}
+%\makeatletter
+\tikzset{no shadows/.code=\let\tikz@preactions\pgfutil@empty}
+%\makeatother
+\tikzset{invisible/.style={transparent,fill opacity=0,text opacity=0,no shadows}}
+\RequirePackage{multimedia}
+
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.10}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Language
+
+%\pgfkeysvalueof{/my/language}
+%\edef\my@lang{\pgfkeysvalueof{/my/language}}
+%\RequirePackage[\my@lang]{babel}
+
+% TODO: There is \iflanguage
+\newcommand*{\ifenglish}[1]{\ifthenelse{\equal{\@my@language}{american}}{#1}{}}
+\newcommand*{\ifgerman}[1]{\ifthenelse{\equal{\@my@language}{ngerman}}{#1}{}}
+\newcommand*{\iffrench}[1]{\ifthenelse{\equal{\@my@language}{french}}{#1}{}}
+
+
+\ifenglish{
+% We are talking english
+\ifluatex
+\RequirePackage{polyglossia}
+\setmainlanguage[variant=american]{english}
+\setotherlanguages{french,german}
+%\setkeys{german}{latesthyphen=true} % Not working well
+\RequirePackage[english=american,autostyle=false]{csquotes}
+\setquotestyle[american]{english}
+\else
+\RequirePackage[american]{babel}
+\fi
+\RequirePackage[nodayofweek]{datetime}
+\longdate
+%\newcommand*{\squote}[1]{\textquoteleft{}#1\textquoteright{}}
+%\newcommand*{\dquote}[1]{\textquotedblleft{}#1\textquotedblright{}}
+\newcommand*{\squote}[1]{`#1'}
+\newcommand*{\dquote}[1]{``#1''}
+\newcommand*{\definitionname}{Definition}
+\newcommand*{\theoremname}{Theorem}
+\newcommand*{\examplename}{Example}
+\newcommand*{\corollaryname}{Corollary}
+\newcommand*{\remarkname}{Remark}
+\newcommand*{\localizedtablename}{Table}
+\newcommand*{\anyquestionstext}{Any Questions?}
+}
+
+\ifgerman{
+% Man spricht deutsch
+\RequirePackage[ngerman]{babel}
+\RequirePackage{bibgerm}                % Deutsche Strings
+%\newcommand*{\squote}[1]{\glq{}#1\grq{}}
+%\newcommand*{\dquote}[1]{\glqq{}#1\grqq{}}
+\newcommand*{\squote}[1]{\quotedblbase{}#1\textquotedblleft{}}
+\newcommand*{\dquote}[1]{\quotesinglbase{}#1\fixligatures\textquoteleft{}}
+\newcommand*{\definitionname}{Definition}
+\newcommand*{\theoremname}{Satz}
+\newcommand*{\examplename}{Beispiel}
+\newcommand*{\corollaryname}{Korollar}
+\newcommand*{\remarkname}{Bemerkung}
+\newcommand*{\localizedtablename}{Tabelle}
+\newcommand*{\anyquestionstext}{Fragen?}
+}
+
+\iffrench{
+\RequirePackage[french]{babel}
+\newcommand*{\dquote}[1]{\guillemotleft{}#1\guillemotright{}}
+\newcommand*{\squote}[1]{\guilsinglleft{}#1\guilsinglright{}}
+}
+
+\RequirePackage{csquotes}		% \enquote
+
+% Figure, floats
+\ifelaboration{
+\RequirePackage{float}		% \begin{figure}[H]
+%\RequirePackage{caption}
+%\RequirePackage{subfig} % deprecated
+\RequirePackage{subcaption}
+\RequirePackage{placeins}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%\RequirePackage[nameinlink,noabbrev,capitalize]{cleveref}   % \cref command, load after hyperref
+\ifelaboration{
+	\RequirePackage{autonum}	% showonlyrefed equation; mathtools has showonlyrefs, but doesn't work with cleveref; load order: amsmath -> hyperref[hypertexnames=false] -> cleveref -> autonum
+	% autonum forgot to path the \Cref command
+	\AtBeginDocument{
+	\ifdef{\Cref}{%
+	\autonum@generatePatchedReferenceCSL{Cref}%
+	}{}%
+	}
+}
+
+
+%\RequirePackage[obeyFinal,textsize=scriptsize,shadow,color=black!20,linecolor=gray]{todonotes} % \todo command
+%\newcommand*{\todox}[2][]{\todo[#1]{#2}\xspace}
+%\newcommand*{\todoinline}[2][]{\todo[inline,#1]{#2}\xspace}
+
+% Section states
+
+                                                                                           % Not yet written;   TODO: Write it
+\newcommand*\sctincomplete{\todo[inline,color=yellow!50!red]{Incomplete}}                  % Incomplete;        TODO: Add missing part/facts
+\newcommand*\sctpoor{\todo[inline,color=red]{Poor}}                                        % Needs rewrite;     TODO: Rewrite
+\newcommand*\sctinconsistent{\todo[inline,color=yellow]{Inconsistent with other sections}} % Inconsistent;      TODO: Check with other sections
+\newcommand*\sctproofread{\todo[inline,color=yellow!50!green]{Needs proofreading}}         % Complete;          TODO: Proofreed on computer
+\newcommand*\sctprintread{\todo[inline,color=yellow!30!green]{Needs printing}}             % Proofreading done; TODO: Print and proofread again
+\newcommand*\sctadvisor{\todo[inline,color=yellow!10!green]{Send to christine}}            % Printing done;     TODO: Send to Christine to proofread
+\newcommand*\sctfine{\todo[inline,color=green]{Fine}}                                      % All done
+\newcommand*\sctdone{\todo[inline,color=green]{Done}}                                      % All done
+
+\newcommand*\christine[1]{\todo[color=blue!60]{Christine: #1}\xspace}
+\newcommand*\olivier[1]{\todo[color=green!60]{Olivier: #1}\xspace}
+\newcommand*\clauss[1]{\todo[inline,color=red!60]{Clauss: #1}\xspace}
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Definitionen
+
+% \newcommand*{\Befehl}[1][default]{Definition #1} - Fehler, wenn \Befehl schon existiert
+% \renewcommand*{\Befehl}{Definition} - Ersetzt bereits vorhandenen \Befehl
+% \providecommand*{\Befehl}{Definition} - \"uberschreibt keine vorhandene Definition von \Befehl
+% \newenvironment*{umgebung}[1][default]{Start #1}{Ende}
+% \renewenvironment*{umgebung}[1][default]{Start #1}{Ende}
+
+
+
+
+% Fonts
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it} % kursive Mathematiker-Schrift
+
+
+% Befehle f\"ur Logiker
+% Aussagenlogik
+\newcommand*{\aand}{\wedge}
+\newcommand*{\aor}{\vee}
+\newcommand*{\aimp}{\to}
+\newcommand*{\aeqv}{\leftrightarrow}
+
+% Meta-Ebene
+\newcommand*{\imp}{\ensuremath{\;\Rightarrow\;}}
+\newcommand*{\wenn}{\ensuremath{\;\Leftarrow\;}}
+\newcommand*{\gdw}{\ensuremath{\;\Leftrightarrow\;}}
+\newcommand*{\nmodels}{\not\models}
+\newcommand*{\scrA}{\ensuremath{\mathscr{A}}}
+\newcommand*{\scrP}{\ensuremath{\mathscr{P}}}
+
+% Befehle f\"ur Mathematiker
+\newcommand*{\setN}{\mathbb{N}} % Natuerliche Zahlen
+\newcommand*{\setZ}{\mathbb{Z}} % Ganze Zahlen
+\newcommand*{\setQ}{\mathbb{Q}} % Rationale Zahlen
+\newcommand*{\setR}{\mathbb{R}} % Reelle Zahlen
+\newcommand*{\setC}{\mathbb{C}} % Komplexe Zahlen
+\newcommand*{\setP}{\mathbb{P}} % Primzahlen
+\newcommand*{\setS}{\mathbb{S}}
+\newcommand*{\setK}{\mathbb{K}} % Koerper
+\newcommand*{\arcosh}{\mathrm{arcosh}}
+\newcommand*{\arcsinh}{\mathrm{arcsinh}}
+\newcommand*{\xor}{\varoplus}
+\renewcommand{\Pr}{\mathpzc{P}}         % Wahrscheinlichkeit
+\newcommand*{\prop}{\sim}                               % Proportional (Relation)
+\newcommand*{\La}{\mathcal{L}}          % Laplace-Transformation/Lineare H\"ulle
+\renewcommand*{\emptyset}{\varnothing}
+
+\newcommand*{\dx}{\;\mathrm{d}x}                % Ableitungsoperator
+\newcommand*{\dy}{\;\mathrm{d}y}
+%\newcommand*{\dz}{\;\mathrm{d}z}
+\newcommand*{\ds}{\;\mathrm{d}s}
+\newcommand*{\dt}{\;\mathrm{d}t}
+\newcommand*{\du}{\;\mathrm{d}u}
+\newcommand*{\dv}{\;\mathrm{d}v}
+
+% sich anpassende Klammern
+\newcommand*{\lB}{\left[}               % Bracket              [box brackets]
+\newcommand*{\rB}{\right]}
+\newcommand*{\lP}{\left(}               % Parenthesis          (round brackets)
+\newcommand*{\rP}{\right)}
+\newcommand*{\lC}{\left\{}              % Curly                {curly brackets, braces}
+\newcommand*{\rC}{\right\}}
+\newcommand*{\lA}{\left<}               % Angle                <angle brackets>
+\newcommand*{\rA}{\right>}
+
+%\providecommand*{\abs}[1]{\lvert #1 \rvert}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\providecommand*{\norm}[1]{\lVert #1 \rVert}
+\providecommand*{\bracket}[1]{\lBrack #1 \rBrack}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiterX\scalarprod[2]{\langle}{\rangle}{#1\delimsize|#2}
+%\DeclarePairedDelimiterX\Set[2]{\{}{\}}{#1\;\delimsize|\;#2}  % Declared by braket package
+\DeclarePairedDelimiterX\setc[2]{\{}{\}}{\,#1 \;\delimsize\vert\; #2\,}
+
+\DeclarePairedDelimiter\paren{(}{)}
+\newcommand*\Paren{\paren*}
+\DeclarePairedDelimiter\pbrack{[}{]}
+\newcommand*\Pbrack{\pbrack*}
+\DeclarePairedDelimiter\pangle{<}{>}
+\newcommand*\Pangle{\pangle*}
+
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\newcommand*\Floor{\floor*}
+
+% Temporale Operatoren
+%\DeclareMathOperator{\G}{\Square}
+%\DeclareMathOperator{\F}{\Diamond}
+%\DeclareMathOperator{\X}{X}
+%\DeclareMathOperator{\U}{U}
+%\DeclareMathOperator{\AG}{AG}
+%\DeclareMathOperator{\EG}{EG}
+%\DeclareMathOperator{\AF}{AF}
+%\DeclareMathOperator{\EF}{EF}
+%\DeclareMathOperator{\AX}{AX}
+%\DeclareMathOperator{\EX}{EX}
+%\DeclareMathOperator{\e}{e}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand*{\emptyline}{\medskip}
+\newcommand*{\txt}[1]{\;\,\text{#1}\;\,}
+\newcommand*{\rem}[1]{&&\txt{(#1)}}
+\newcommand*{\lagrange}{\mathcal{L}}
+\newcommand*{\calL}{\mathcal{L}}
+\newcommand*{\calA}{\mathcal{A}}
+\newcommand*{\amp}{\&\xspace}
+\newcommand*\entspr{\ensuremath{\mathrel{\widehat{=}}}}%
+
+\newcommand*{\fname}[1]{\mbox{\texttt{#1}}}
+\newcommand*{\red}[1]{\textcolor{red}{#1}}
+\newcommand*{\green}[1]{\textcolor{green!50!black}{#1}}
+\newcommand*{\blue}[1]{\textcolor{blue}{#1}}
+
+
+% Rubber length
+\newcommand*{\nul}{\hspace*{0pt}}
+\newcommand*{\hffill}{\nul\hfill\nul}
+
+%\theoremstyle{plain}
+%\newtheoremstyle{thm}{}{0.8em}{\itshape}{}{\bfseries}{}{\newline}{\thmnumber{#2}\thmname{ #1}\thmnote{\textnormal{ (#3)}}}
+%\newtheoremstyle{def}{}{0.8em}{}{}{\bfseries}{}{\newline}{\thmnumber{#2}\thmname{ #1}\thmnote{\textnormal{ (#3)}}}
+%\newtheoremstyle{rem}{}{0.8em}{}{}{\bfseries}{}{\newline}{\thmnumber{#2}\thmname{ #1}\thmnote{\textnormal{ (#3)}}}
+\newtheoremstyle{thm}{}{0.8em}{\itshape}{}{\bfseries}{}{\newline}{}
+\newtheoremstyle{def}{}{0.8em}{}{}{\bfseries}{}{\newline}{}
+\newtheoremstyle{rem}{}{0.8em}{}{}{\bfseries}{}{\newline}{}
+
+%\theoremstyle{thm}
+%\ifelaboration{\newtheorem{theorem}{\theoremname}[section]}
+%\ifelaboration{\newtheorem{lemma}[theorem]{Lemma}}
+%\ifelaboration{\newtheorem{corollary}[theorem]{\corollaryname}}
+%\theoremstyle{def}
+%\ifelaboration{\newtheorem{definition}[theorem]{\definitionname}}
+%\theoremstyle{rem}
+%\ifelaboration{\newtheorem{remark}[theorem]{\remarkname}}
+%\ifelaboration{\newtheorem{example}[theorem]{\examplename}}
+
+ % Figure und Table benutzen gleichen Counter
+%\def\ftype@table{1} % ohne caption.sty
+%\captionsetup[table]{type=figure,name=\localizedtablename} % mit caption.sty
+
+\ifx\c@chapter\undefined
+\else
+\theoremstyle{thm}
+\ifelaboration{\newtheorem{theorem}{\theoremname}[chapter]}
+\ifelaboration{\newtheorem{lemma}{Lemma}[chapter]}
+\ifelaboration{\newtheorem{corollary}{\corollaryname}[chapter]}
+\theoremstyle{def}
+\ifelaboration{\newtheorem{definition}{\definitionname}[chapter]}
+\theoremstyle{rem}
+\ifelaboration{\newtheorem{remark}{\remarkname}[chapter]}
+\ifelaboration{\newtheorem{example}{\examplename}[chapter]}
+%\numberwithin{figure}{section}
+\fi
+
+
+% tabularx-Spaltentypen
+\newcolumntype{P}{X}								% paragraph
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}	% left
+\newcolumntype{C}{>{\centering\arraybackslash}X}	% center
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}	% right
+
+% Gro{\ss}schreibung f\"ur \autoref
+%  \def\equationautorefname{Equation}%
+%  \def\footnoteautorefname{footnote}%
+%  \def\itemautorefname{item}%
+%  \def\figureautorefname{Figure}%
+%  \def\tableautorefname{Table}%
+%  \def\partautorefname{Part}%
+%  \def\appendixautorefname{Appendix}%
+%  \def\chapterautorefname{chapter}%
+  \renewcommand*{\sectionautorefname}{Section}%
+  \renewcommand*{\subsectionautorefname}{Section}%
+  \renewcommand*{\subsubsectionautorefname}{Section}%
+%  \def\paragraphautorefname{paragraph}%
+%  \def\subparagraphautorefname{subparagraph}%
+%  \def\FancyVerbLineautorefname{line}%
+%  \def\theoremautorefname{Theorem}%
+%  \def\pageautorefname{page}%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Layout
+
+%\ifthenelse{\equal{\@my@fancyauthor}{}}{
+%\renewcommand*\@my@fancyauthor{\@my@author}
+%}{
+%}
+
+\ifpresentation{
+\ifthenelse{\equal{\@my@shortinstitute}{}}{%
+\institute{\@my@institute}%
+}{%
+\institute[\@my@shortinstitute]{\@my@institute}%
+}%
+}
+
+\ifthenelse{\equal{\@my@publishers}{}}{}{
+%\publishers{\@my@publishers}
+}
+%\date{\@my@date}
+
+% Warnung f \titlehead ausschalten
+\def\HyPsd@CatcodeWarning#1{}
+
+\iftitlepage{
+%\titlehead{
+%  \begin{center} \begin{minipage}{11.3cm} \begin{flushright}
+%    \includegraphics[width=\textwidth]{uni-logo}\\
+%    \textsf{Fakult\"at f\"ur Elektrotechnik, Informatik und Mathematik}
+%  \end{flushright} \end{minipage} \end{center}
+%}
+}
+
+%\sloppy
+
+\ifelaboration{%
+%\setlength{\parindent}{0mm}
+%\setlength{\parskip}{0.5ex}
+%\RequirePackage{parskip}
+%
+%\RequirePackage{scrpage2}       % Fuss- und Kopfzeilen von KOMA
+%\setheadsepline{0.4pt}%
+%\pagestyle{scrheadings}%
+%\setkomafont{pageheadfoot}{\normalcolor\small} % Tipp von Markus Kohm
+%\addtokomafont{caption}{\small} % Aktive Auszeichnung von Legenden
+%\setkomafont{captionlabel}{\sffamily\bfseries}% "Figure 3.4" in Fett
+%\automark[section]{chapter}
+}
+
+
+
+
+
+%\ifelaboration{%
+% Aus scrrept.cls
+\newcommand*{\preamblechapter}[1]{\chapterheadstartvskip%
+  {%
+    \setlength{\parindent}{\z@}\setlength{\parfillskip}{\fill}%
+    \normalfont\sectfont\nobreak\size@chapter{}%
+%    \if@chapterprefix
+%      \let\@tempa\raggedsection
+%    \else
+      \let\@tempa\@hangfrom%
+%    \fi
+%    \@tempa{\ifnum \c@secnumdepth >\m@ne%
+%          \if@chapterprefix
+%            \expandafter\size@chapterprefix
+%          \else
+%            \expandafter\size@chapter
+%          \fi
+%          {\chapterformat}%
+%          \if@chapterprefix
+%            \size@chapterprefix{}\endgraf\nobreak\vskip.5\baselineskip
+%          \fi
+%      \fi
+%    }%
+    {\raggedsection \interlinepenalty \@M \size@chapter{#1}\par}}%
+  \nobreak\chapterheadendvskip%
+}%
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Neuere Methoden
+
+% Benennungsschema:
+%
+% Zur Makroart:
+%   env == Umgebung mit \newenvironment
+%   box == Befehl mit \newcommand
+%   <ohne> == Meist genutzte Verwendung
+
+% Zur Gr:
+%   page == explizites setzen der Breite (wie minipage)
+%   par == Breite ist \textwidth
+%   fit == passt sich dem Inhalt an (mit \varwidth und seinen Beschrnkungen)
+%   <ohne> == keine Angabe, also Einzeiler oder wie untergeordneter Inhalt
+
+% Zur Grrung:
+%   <ohne> == keine Grderung
+%   scale == relative Grangabe (wie \scalebox)
+%   resize == Zielgrngabe (wie \resizebox)
+%   virt == Angabe der inneren/virtuellen Gr
+
+% Zur Form:
+%   block == Blaue beamer blocks
+%   exampleblock == Grne beamer blocks
+%   alertblock == Rote beamer blocks
+
+
+
+% Setzt ein tikz-coordinate an diese Stelle
+% \anchor[placement t()op, b(ottom), m(iddle) or ()baseline)]{node name}
+\newcommand{\anchor}[2][]{%
+\ifthenelse{\equal{#1}{t}}{%
+        \tikz[remember picture,overlay,baseline=(#2 anchor.base)] {\node[outer sep=0pt,inner sep=0pt](#2 anchor){\vphantom{MX}}; \coordinate(#2) at (#2 anchor.north);}%
+}{%
+        \ifthenelse{\equal{#1}{b}}{%
+                        \tikz[remember picture,overlay,baseline=(#2 anchor.base)] {\node[outer sep=0pt,inner sep=0pt](#2 anchor){\vphantom{jp}}; \coordinate(#2) at (#2 anchor.south);}%
+        }{%
+                \ifthenelse{\equal{#1}{m}}{%
+                        \tikz[remember picture,overlay,baseline=(#2 anchor.base)] {\node[outer sep=0pt,inner sep=0pt](#2 anchor){\vphantom{MXjp}}; \coordinate(#2) at (#2 anchor.center);}%
+                }{%
+                        \tikz[remember picture,overlay,baseline=(#2)] {\coordinate (#2);}%
+                }%
+        }%
+}%
+}
+
+\newcommand*\anchorphantom[1]{%
+\tikz[remember picture,overlay,baseline=(#1.base)] {\node[outer sep=0pt,inner sep=0pt](#1){\vphantom{[MXjp}};}%
+}
+
+% \begin{anchorenv}
+
+
+
+\newcommand{\anchorbox}[3][]{%
+   \tikz[remember picture,baseline=(#2.base)] \node[inner sep=0,outer sep=0,minimum size=0pt,#1](#2) {\minibox{#3}};%
+}
+
+
+% Eine minipage, die genau so gro ist wie ihr Inhalt
+% \begin{fit}
+\newenvironment*{fit}{%
+\begin{varwidth}{2\paperwidth}%
+}{%
+\end{varwidth}%
+}
+
+
+
+% \begin{scaleenv}{percentage}
+\newsavebox{\my@scale@Lrbox}
+\newcommand*{\my@scale@Percentage}{}
+\newenvironment*{scaleenv}[1]{%
+\renewcommand*{\my@scale@Percentage}{#1}%
+\begin{lrbox}{\my@scale@Lrbox}%
+}{%
+\end{lrbox}%
+\scalebox{\my@scale@Percentage}{\usebox{\my@scale@Lrbox}}%
+}%
+
+
+% \begin{scalepar}{percentage}
+\newsavebox{\my@scalepar@TempBox}
+\newenvironment{scalepar}[1]{%
+\def\my@DoScalePar{\scalebox{#1}}%
+\begin{lrbox}{\my@scalepar@TempBox}%
+\pgfmathparse{\textwidth/#1}%
+\begin{minipage}{\pgfmathresult pt}%
+}{%
+\end{minipage}%
+\end{lrbox}%
+\my@DoScalePar{\usebox{\my@scalepar@TempBox}}%
+}
+
+% Skaliert auf Zielgre
+%\begin{resizeenv}{width}
+\newsavebox{\my@resizeenv@TempBox}%
+\newcommand*{\my@resizeenv@width}{}%
+\newenvironment{resizeenv}[1]{%
+\renewcommand*{\my@resizeenv@width}{#1}%
+\begin{lrbox}{\my@resizeenv@TempBox}%
+}{%
+\end{lrbox}%
+\resizebox{\my@resizeenv@width}{!}{\usebox{\my@resizeenv@TempBox}}%
+}%
+
+
+
+% Verkleinert/vergrert zu \textwidth
+% \begin{resizepar}
+\newenvironment{resizepar}{%
+\begin{resizeenv}{\textwidth}%
+}{%
+\end{resizeenv}%
+}%
+
+
+
+
+
+% \begin{parblock}{Titel}
+\ifpresentation{
+\newenvironment<>*{parblock}[1]{%
+\begin{actionenv}#2%
+        \begin{minipage}{\textwidth}%
+        \vspace{-3mm}%
+        \begin{block}{#1}%
+}{%
+        \end{block}%
+        \vspace{-1mm}%
+        \end{minipage}%
+        \end{actionenv}%
+}
+}
+
+% \begin{fitblock}{Title}
+\ifpresentation{
+\newsavebox{\my@fitblock@Lrbox}%
+\newlength{\my@fitblock@Width}%
+\newcommand*{\my@fitblock@Title}{}%
+\newenvironment*{fitblock}[1]{%
+        \renewcommand*{\my@fitblock@Title}{#1}%
+        \begin{lrbox}{\my@fitblock@Lrbox}%
+        \begin{fit}%
+}{%
+        \end{fit}%
+        \end{lrbox}%
+        \settowidth{\my@fitblock@Width}{\usebox{\my@fitblock@Lrbox}}%
+        \begin{minipage}{\my@fitblock@Width}%
+        \begin{parblock}{\my@fitblock@Title}%
+        \usebox{\my@fitblock@Lrbox}%
+        \end{parblock}%
+        \end{minipage}%
+}%
+\renewenvironment<>{fitblock}[1]{%
+        \begin{actionenv}#2%
+        \begin{originalfitblock}{#1}%
+}{%
+        \end{originalfitblock}%
+        \end{actionenv}%
+}
+}
+
+
+% \begin{parexampleblock}{Titel}
+\ifpresentation{
+\newenvironment<>*{parexampleblock}[1]{%
+\begin{actionenv}#2%
+        \begin{minipage}{\textwidth}%
+        \vspace{-3mm}%
+        \begin{exampleblock}{#1}%
+}{%
+        \end{exampleblock}%
+        \vspace{-1mm}%
+        \end{minipage}%
+        \end{actionenv}%
+}
+}
+
+% \begin{fitexampleblock}{Title}
+\newsavebox{\my@fitexampleblock@Lrbox}%
+\newlength{\my@fitexampleblock@Width}%
+\newcommand*{\my@fitexampleblock@Title}{}%
+\newenvironment*{fitexampleblock}[1]{%
+        \renewcommand*{\my@fitexampleblock@Title}{#1}%
+        \begin{lrbox}{\my@fitexampleblock@Lrbox}%
+        \begin{fit}%
+}{%
+        \end{fit}%
+        \end{lrbox}%
+        \settowidth{\my@fitexampleblock@Width}{\usebox{\my@fitexampleblock@Lrbox}}%
+        \begin{minipage}{\my@fitexampleblock@Width}%
+        \begin{parexampleblock}{\my@fitexampleblock@Title}%
+        \usebox{\my@fitexampleblock@Lrbox}%
+        \end{parexampleblock}%
+        \end{minipage}%
+}%
+
+\ifpresentation{
+\renewenvironment<>{fitexampleblock}[1]{%
+        \begin{actionenv}#2%
+        \begin{originalfitexampleblock}{#1}%
+}{%
+        \end{originalfitexampleblock}%
+        \end{actionenv}%
+}
+}
+
+
+
+
+% Positioniert etwas an eine bestimmte Stelle
+% \begin{locate}[options]{position}
+\ifnotes{\newenvironment*{locate}[2][]{}{}}
+\ifnotnotes{%
+\newsavebox{\my@locate@Lrbox}
+\newenvironment*{locate}[2][]{%
+        \tikzset{my@locate@Options/.style={#1}}%
+        \begin{tikzpicture}[remember picture,overlay]%
+        \coordinate (my@locate@Position) at (#2);
+        \end{tikzpicture}%
+        \begin{lrbox}{\my@locate@Lrbox}%
+}{%
+        \end{lrbox}%
+        \begin{tikzpicture}[remember picture,overlay]%
+        \node[my@locate@Options,inner sep=0,outer sep=0] at (my@locate@Position) {\usebox{\my@locate@Lrbox}};%
+        \end{tikzpicture}%
+}
+}
+
+\ifpresentation{
+\renewenvironment<>{locate}[2][]{%
+\begin{actionenv}#3\begin{originallocate}[#1]{#2}%
+}{%
+\end{originallocate}\end{actionenv}%
+}
+}
+
+
+
+
+% Tikz coordinate system: Relativ zur aktuellen Seite
+% "page cs:x=0,y=0" == Oben links
+% "page cs:x=1,y=1" == Unten rechts
+\define@key{pagekeys}{x}{\def\mypagex{#1}}
+\define@key{pagekeys}{y}{\def\mypagey{#1}}
+\tikzdeclarecoordinatesystem{page}{%
+\setkeys{pagekeys}{#1}%
+\pgfpointlineattime{%
+        \mypagex%
+}{%
+        \pgfpointlineattime{%
+                \mypagey%
+        }{%
+                \pgfpointanchor{current page}{north west}%
+        }{%
+                \pgfpointanchor{current page}{south west}%
+        }%
+}{%
+        \pgfpointlineattime{%
+                \mypagey%
+        }{%
+                \pgfpointanchor{current page}{north east}%
+        }{%
+                \pgfpointanchor{current page}{south east}%
+        }%
+}%
+}
+
+
+\define@key{bbkeys}{x}{\def\mybbx{#1}}
+\define@key{bbkeys}{y}{\def\mybby{#1}}
+\tikzdeclarecoordinatesystem{bb}{%
+\setkeys{bbkeys}{#1}%
+\pgfpointlineattime{%
+        \mybbx%
+}{%
+        \pgfpointlineattime{%
+                \mybby%
+        }{%
+                \pgfpointanchor{current bounding box}{north west}%
+        }{%
+                \pgfpointanchor{current bounding box}{south west}%
+        }%
+}{%
+        \pgfpointlineattime{%
+                \mybby%
+        }{%
+                \pgfpointanchor{current bounding box}{north east}%
+        }{%
+                \pgfpointanchor{current bounding box}{south east}%
+        }%
+}%
+}
+
+
+\ifpresentation{
+\newsavebox{\my@markenv@Lrbox}
+\newcommand*{\my@markenv@Overlay}{}
+\newenvironment<>*{markenv}{%
+\begin{lrbox}{\my@markenv@Lrbox}%
+\renewcommand*{\my@markenv@Overlay}{#1}
+}{%
+\end{lrbox}%
+\mark\my@markenv@Overlay{\usebox{\my@markenv@Lrbox}}%
+}
+}
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Diese Abschnitt ist deprecated
+
+
+%\scaleblock{width}{scalefactor}{relX}{relY}{posX}{posY}{content}
+%width = width as printed on the canvas (\textwidth in content is different)
+%scalefactor < 1 = smaller
+%relX = anchor of block (0 = left, 1 = right, 0.5 = middle)
+%relY = anchor of block (0 = top, 1 = bottom, 0.5 = middle)
+%posX = position of anchor on paper (0 = left, 1 = right, 0.5 = middle)
+%posY = position of anchor on paper (0 = top, 1 = bottom, 0.5 = middle)
+%content
+\ifnotnotes{
+\newcommand*{\scaleblock}[7]{%
+\pgfmathparse{#1/\TPHorizModule}%
+\begin{textblock}{\pgfmathresult}[#3,#4](#5,#6)%
+\scalebox{#2}{%
+\pgfmathparse{#1/#2}%
+\begin{minipage}{\pgfmathresult pt}%
+#7%
+\end{minipage}%
+}%
+\end{textblock}%
+}%
+}
+\ifnotes{
+\newcommand*{\scaleblock}[7]{}
+}
+
+
+\newcommand*{\scalefromto}[3]{%
+\pgfmathparse{#2/#1}%
+\scalebox{\pgfmathresult}{%
+\begin{minipage}{#1}%
+#3%
+\end{minipage}%
+}%
+}
+
+\newcommand*{\scaleto}[3]{%
+\pgfmathparse{#2/#1}%
+%\fbox{
+\scalebox{#1}{%
+\begin{minipage}{\pgfmathresult pt}%
+#3%
+\end{minipage}%
+}%
+%}%
+}
+
+\newcommand*{\scalefrom}[3]{%
+\scalebox{#2}{%
+\begin{minipage}{#1}%
+#3%
+\end{minipage}%
+}%
+}
+
+%Deprecated by environment scalepar
+%\scalepar2{scalefactor}{content}
+\newcommand*{\scalepara}[2]{\scaleto{#1}{\textwidth}{#2}}
+
+\ifdraft{
+\newcommand*{\debugbox}[1]{\fbox{#1}}
+}{
+\newcommand*{\debugbox}[1]{#1}
+}
+
+\newlength{\changetextwidthTextwidth}
+\newenvironment*{changetextwidth}[2]{%
+\setlength{\changetextwidthTextwidth}{\textwidth}%
+\addtolength{\changetextwidthTextwidth}{-#1}%
+\addtolength{\changetextwidthTextwidth}{-#2}%
+\begin{adjustwidth}{#1}{#2}%
+%\setlength{\textwidth}{\changetextwidthTextwidth}
+%\changetext{}{\changetextwidthTextwidth}{}{}{}%
+%\addtolength{\textwidth}{-#1}
+%\addtolength{\textwidth}{-#2}
+%\begin{minipage}{\textwidth}%
+%\hspace*{#1}*%
+\begin{minipage}{\changetextwidthTextwidth}%
+}{%
+\end{minipage}%
+%\end{minipage}%
+\end{adjustwidth}%
+}
+
+%\begin{block}{Title}
+%\end{block}
+
+%\begin{exampleblock}{Title}
+%\end{exampleblock}
+
+%\begin{alertblock}{Title}
+%\end{alertblock}
+
+\ifdraft{
+\newsavebox{\draftparTempBox}
+\newenvironment{draftpar}{\begin{lrbox}{\draftparTempBox}\begin{minipage}{\textwidth}}{\end{minipage}\end{lrbox}\fbox{\usebox{\draftparTempBox}}}
+}{
+\newenvironment{draftpar}{\begin{minipage}{\textwidth}}{\end{minipage}}
+}
+
+%
+%\newsavebox{\scaleparTempBox}
+%\newenvironment{scalepar}[1]{%
+%\def\myDoScale{\scalebox{#1}}%
+%\begin{lrbox}{\scaleparTempBox}%
+%\pgfmathparse{\textwidth/#1}%
+%\begin{minipage}{\pgfmathresult pt}%
+%}{%
+%\end{minipage}%
+%\end{lrbox}%
+%\myDoScale{\usebox{\scaleparTempBox}}%
+%}
+
+
+
+
+
+
+
+% Um den leerraum vor display zu verringern
+%\abovedisplayskip=0pt
+%\abovedisplayshortskip=0pt
+%\belowdisplayskip=0pt
+%\belowdisplayshortskip=0pt
+% Funktioniert nicht?
+
+
+
+% \begin{rememberpos}{node name}
+\newsavebox{\anchornodeLrbox}
+\newcommand*{\anchornodeNodename}{}
+\newenvironment*{anchornode}[1]{%
+        \renewcommand*{\anchornodeNodename}{#1}%
+        \begin{lrbox}{\anchornodeLrbox}%
+}{%
+        \end{lrbox}%
+        \begin{tikzpicture}[remember picture]%
+        \node[inner sep=0,outer sep=0] (\anchornodeNodename) {\usebox{\anchornodeLrbox}};%
+        \end{tikzpicture}%
+}
+
+% \begin{locatebox}[options]{position}{node name}
+\newsavebox{\locateboxLrbox}
+\newcommand*{\locateboxNodename}{}
+\newenvironment*{locatebox}[3][]{%
+        \tikzset{locateboxOptions/.style={#1}}%
+        \begin{tikzpicture}[remember picture,overlay]%
+        \coordinate (locateboxPosition) at (#2);
+        \end{tikzpicture}%
+        \renewcommand*{\locateboxNodename}{#3}
+        \begin{lrbox}{\locateboxLrbox}%
+}{%
+        \end{lrbox}%
+        \begin{tikzpicture}[remember picture,overlay]%
+        \ifthenelse{\equal{\locateboxNodename}{}}{
+                \node[locateboxOptions,inner sep=0,outer sep=0] at (locateboxPosition) {\usebox{\locateboxLrbox}};
+        }{
+                \node[locateboxOptions,inner sep=0,outer sep=0](\locateboxNodename) at (locateboxPosition) {\usebox{\locateboxLrbox}};%
+        }
+        \end{tikzpicture}%
+}
+
+\ifpresentation{%
+\renewenvironment<>{locatebox}[3][]{%
+\begin{actionenv}#4\begin{originallocatebox}[#1]{#2}{#3}
+}{%
+\end{originallocatebox}\end{actionenv}
+}
+}
+
+% \begin{fitpage}
+\newenvironment*{fitpage}{%
+\begin{varwidth}{2\paperwidth}
+}{%
+\end{varwidth}
+}
+
+% \fitbox{}
+% Just as \minibox
+% Compared to \minibox, adds less vertical space, but \minibox has [lcrtb] option flags; \minibox uses \begin{tabular} as implementation
+\newcommand{\fitbox}[1]{\begin{fitpage}#1\end{fitpage}}
+
+% \begin{scale}{percentage}
+%\newsavebox{\scaleLrbox}
+%\newcommand*{\scalePercentage}{}
+%\newenvironment*{scale}[1]{%
+%\renewcommand*{\scalePercentage}{#1}%
+%\begin{lrbox}{\scaleLrbox}%
+%}{%
+%\end{lrbox}%
+%\scalebox{\scalePercentage}{\usebox{\scaleLrbox}}%
+%}
+
+% \begin{rotate}{degree}
+\newsavebox{\rotateLrbox}
+\newcommand*{\rotateDegree}{}
+\newenvironment*{rotate}[1]{%
+\renewcommand*{\rotateDegree}{#1}%
+\begin{lrbox}{\rotateLrbox}%
+}{%
+\end{lrbox}%
+\rotatebox{\rotateDegree}{\usebox{\rotateLrbox}}%
+}
+
+% \cleargrow{container node}
+\newcommand*{\cleargrow}[1]{
+        \pgfutil@undefine{pgf@sh@ns@#1}
+}
+\long\def\pgfutil@undefine#1{%
+  \expandafter\let\csname#1\endcsname\undefined%
+}
+
+% \growfit{container node}{child node}
+\newcommand*{\growfit}[2]{
+        \pgfutil@ifundefined{pgf@sh@ns@#1}{
+                \node[shift only,xshift=0,yshift=0,inner sep=0,outer sep=0,xscale=0.55,fit={(#2)}](#1) {};
+        }{
+                \node[shift only,xshift=0,yshift=0,inner sep=0,outer sep=0,xscale=0.55,fit={(#1) (#2)}](#1) {};
+        }
+}
+
+\newcommand*{\adj}{\vphantom{Xg}}
+\newcommand*{\then}[1]{\pgfmath@tonumber{#1}}
+
+
+
+
+% pgf 'file' shape
+\def\myfoldheight{0.5}
+\def\myshapepath{
+	\pgfextract@process\northwest{
+		\southwest\pgf@xa=\pgf@x
+		\northeast
+		\pgf@x=\pgf@xa
+	}
+
+	\pgfextract@process\southeast{
+		\southwest\pgf@ya=\pgf@y
+		\northeast
+		\pgf@y=\pgf@ya
+	}
+
+	\pgfextract@process\northfold{
+		\pgfpointdiff{\southwest}{\northeast}
+		\northeast
+		\advance\pgf@x-\myfoldheight\pgf@y
+	}
+
+	\pgfextract@process\eastfold{
+		\pgfpointdiff{\southwest}{\northeast}
+		\northeast
+		\advance\pgf@y-\myfoldheight\pgf@y
+	}
+
+	\pgfextract@process\fold{
+		\northfold\pgf@xa=\pgf@x
+		\eastfold
+		\pgf@x=\pgf@xa
+	}
+
+	\pgfpathmoveto{\southwest}
+	\pgfpathlineto{\northwest}
+	\pgfpathlineto{\northfold}
+	\pgfpathlineto{\eastfold}
+	\pgfpathlineto{\southeast}
+	\pgfpathclose
+}
+
+% compute an intersection point between a line and \myshapepath
+% NOTE: Breaks inside \graph[layered layout]
+\def\myshapeanchorborder#1#2{
+	% #1 = point inside the shape
+	% #2 = direction
+	\pgftransformreset % without this, the intersection commands yield strange results
+	\pgf@relevantforpicturesizefalse % don't include drawings in bounding box
+	\pgfintersectionofpaths{
+		\myshapepath
+		%\pgfgetpath\temppath\pgfusepath{stroke}\pgfsetpath\temppath % draw path for debugging
+	}{
+		\pgfpathmoveto{
+			\pgfpointadd{
+				\pgfpointdiff{\southwest}{\northeast}\pgf@xc=\pgf@x \advance\pgf@xc by \pgf@y % calculate a distance that is guaranteed to be outside the shape
+				\pgfpointscale{
+					\pgf@xc
+				}{
+					\pgfpointnormalised{
+						#2
+					}
+				}
+			} {
+				#1
+			}
+		}
+		\pgfpathlineto{#1}
+		%\pgfgetpath\temppath\pgfusepath{stroke}\pgfsetpath\temppath % draw path for debugging
+	}
+	\pgfpointintersectionsolution{1}
+}
+\def\myshapeanchorcenter{
+	\pgfpointscale{.5}{\pgfpointadd{\southwest}{\northeast}}
+}
+
+% we could probably re-use some existing \dimen, but better be careful
+\newdimen\myshapedimenx
+\newdimen\myshapedimeny
+
+\pgfdeclareshape{file}{
+	% some stuff, we can inherit from the rectangle shape
+	\inheritsavedanchors[from=rectangle]
+	\inheritanchor[from=rectangle]{center}
+	\inheritanchor[from=rectangle]{mid}
+	\inheritanchor[from=rectangle]{base}
+
+	% calculate these anchors so they lie on a coorinate line with .center
+	\inheritanchor[from=rectangle]{west}
+	\inheritanchor[from=rectangle]{east}
+	\inheritanchor[from=rectangle]{north}
+	\inheritanchor[from=rectangle]{south}
+
+	% calculate these anchors so they lie on a line through .center and the corresponding anchor of the underlying rectangle
+	\inheritanchor[from=rectangle]{south west}
+	\inheritanchor[from=rectangle]{south east}
+	\inheritanchor[from=rectangle]{north west}
+	%    \inheritanchor[from=rectangle]{north east}
+
+	% somewhat more special anchors. The coordinate calculations were taken from the rectangle node
+	\inheritanchor[from=rectangle]{mid west}
+	\inheritanchor[from=rectangle]{mid east}
+	\inheritanchor[from=rectangle]{base west}
+	\inheritanchor[from=rectangle]{base east}
+
+	\backgroundpath{
+		\myshapepath
+	}
+
+	\foregroundpath{
+		\pgfpathmoveto{\northfold}
+		\pgfpathlineto{\fold}
+		\pgfpathlineto{\eastfold}
+	}
+
+	% This is from rectangle, i.e. without the fold.
+	\anchorborder{%
+		\pgf@xb=\pgf@x% xb/yb is target
+		\pgf@yb=\pgf@y%
+		\southwest%
+		\pgf@xa=\pgf@x% xa/ya is se
+		\pgf@ya=\pgf@y%
+		\northeast%
+		\advance\pgf@x by-\pgf@xa%
+		\advance\pgf@y by-\pgf@ya%
+		\pgf@xc=.5\pgf@x% x/y is half width/height
+		\pgf@yc=.5\pgf@y%
+		\advance\pgf@xa by\pgf@xc% xa/ya becomes center
+		\advance\pgf@ya by\pgf@yc%
+		\edef\pgf@marshal{%
+			\noexpand\pgfpointborderrectangle
+			{\noexpand\pgfqpoint{\the\pgf@xb}{\the\pgf@yb}}
+			{\noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}%
+		}%
+		\pgf@process{\pgf@marshal}%
+		\advance\pgf@x by\pgf@xa%
+		\advance\pgf@y by\pgf@ya%
+	}
+
+	%    \anchorborder{
+	%        \myshapedimenx=\pgf@x
+	%        \myshapedimeny=\pgf@y
+	%        \myshapeanchorborder{\myshapeanchorcenter}{\pgfpoint{\myshapedimenx}{\myshapedimeny}}
+	%    }
+}
+
+
+
+\newenvironment{tightcenter}{%
+  \setlength\topsep{0pt}
+  \setlength\parskip{0pt}
+  \begin{center}
+}{%
+  \end{center}
+}
+
+
+
+
+
+% Some predefined colors (http://latexcolor.com/)
+\definecolor{darkbrown}{rgb}{0.4, 0.26, 0.13}
+\definecolor{dartmouthgreen}{rgb}{0.05, 0.5, 0.06}
+\definecolor{crimsonglory}{rgb}{0.75, 0.0, 0.2}
+\definecolor{chromeyellow}{rgb}{1.0, 0.65, 0.0}
+\definecolor{amethyst}{rgb}{0.6, 0.4, 0.8}
+\definecolor{darkgoldenrod}{rgb}{0.72, 0.53, 0.04}
+\definecolor{darkmagenta}{rgb}{0.55, 0.0, 0.55}
+\definecolor{darkgreen}{rgb}{0.0, 0.2, 0.13}
+\definecolor{cadmiumgreen}{rgb}{0.0, 0.42, 0.24}
+\definecolor{darkspringgreen}{rgb}{0.09, 0.45, 0.27}
+\definecolor{applegreen}{rgb}{0.55, 0.71, 0.0}
+\definecolor{babyblue}{rgb}{0.54, 0.81, 0.94}
+\definecolor{darkred}{rgb}{0.55, 0.0, 0.0}
+\definecolor{caribbeangreen}{rgb}{0.0, 0.8, 0.6}
+\definecolor{chartreuse}{rgb}{0.5, 1.0, 0.0}
+
+
+\ifelaboration{
+  \input{my.elaboration.sty}
+}
+\ifpresentation{
+  \input{my.presentation.sty}
+}
+
+
+%\RequirePackage{slashed}
+
+\RequirePackage{pdfpages}
+

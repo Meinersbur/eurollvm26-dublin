@@ -1,0 +1,68 @@
+# -*- coding: iso-8859-1 -*-
+
+
+AvailableTransitions = [Crossfade]
+
+FrameSingleSlide = {
+  'overview': True,
+  'transition': Crossfade,
+  'transtime': 100,
+}
+
+FrameFirstSlide = {
+  'overview': True,
+  'transition': Crossfade,
+  'transtime': 100,
+}
+
+FrameInnerSlide = {
+  'overview': False,
+  'transition': Crossfade,
+  'transtime': 500,
+}
+
+FrameLastSlide = {
+  'overview': False,
+  'transition': Crossfade,
+  'transtime': 50,
+}
+
+AnimateSlide = {
+  'overview': False,
+  'transtime': 20,
+  'timeout': 1,
+}
+
+PageProps = {}
+execfile("presentation.pdf.info.inc", globals())
+
+
+def do_something(n):
+  # Notify autoscript that slide number has been changed
+  print "Change to page",n
+  #shell.AppActivate("notes-final.pdf - Foxit Reader")
+  #shell.AppActivate('notes.pdf - Foxit Reader 2.3 - [notes.pdf]')
+  #shell.SendKeys('^+n' + repr(n) + '~')
+  #SendKeys.SendKeys('^e')
+  shell.SendKeys('^+n')
+  #shell.AppActivate("Impressive")
+
+def change_to_page(n):
+	pass
+
+
+for kpage in PageProps.keys():
+  PageProps[kpage] = dict.copy(PageProps[kpage])
+
+for kpage in PageProps.keys():
+  cur = PageProps[kpage]
+  #cur['transtime'] = 100
+  if kpage == 1:
+    cur['OnEnter'] = change_to_page(kpage)
+  if kpage > 1:
+    prev = PageProps[kpage - 1]
+    if 'timeout' in cur.keys():
+      if not 'timeout' in prev.keys():
+        prev['transtime'] = cur['transtime']
+    else:
+      cur['OnEnter'] = change_to_page(kpage)

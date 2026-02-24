@@ -1,0 +1,58 @@
+% !TeX document-id = {9db963bd-f161-4f96-9f02-0b30e7780e1b}
+% !TeX encoding = UTF-8
+% !TeX program = lualatex
+% !TeX TXS-program:compile = txs:///lualatex/[-shell-escape -synctex=1 -interaction=nonstopmode]
+
+
+%\DocumentMetadata{uncompress}
+\RequirePackage{expl3}
+\ExplSyntaxOn
+\pdf_uncompress:
+\ExplSyntaxOff
+
+\def\inputall{}
+\ifdefined\docstage
+\else
+%\def\docstage{draft}
+\def\docstage{final}
+\fi
+
+\documentclass[\docstage,english,aspectratio=169,onlytextwidth]{beamer}
+\usepackage[presentation,
+keywords={},
+]{my}
+%\usepackage[UTF8]{inputenc}
+\usepackage{changepage}
+
+\usepackage{tikzsymbols}
+
+
+%\title{Loops}
+\title[Loop-Analysis on LLVM-IR]{Creating an LLVM Runtime}
+\subtitle{EuroLLVM 2026}
+\author{\underline{Michael Kruse}}
+\institute{Advanced Micro Devices GmbH}
+\date{14\textsuperscript{th} April, 2026}
+
+\usegdlibrary{more-crossing-algorithms}
+
+% mylatex
+
+\ifdefined\inputall
+\else
+\includeonly{
+}
+\fi %\ifdefined\inputall
+
+%\usetikzlibrary{external}
+%\tikzexternalize
+
+\input{macros}
+
+
+\begin{document}
+
+%\includeonlyframes{lefttoright}
+\input{slides}
+
+\end{document}

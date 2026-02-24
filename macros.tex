@@ -1,0 +1,111 @@
+
+\newcommand*\arrowdown[1]{%
+\begin{tikzpicture}%
+%\node[text width=\textwidth,outer ysep=0pt,inner ysep=0pt](text){};
+\node[draw=accentcolor,very thick,single arrow,rotate=-90,anchor=center,minimum width=8mm,minimum height=8mm,outer ysep=0pt,rounded corners=1pt,blur shadow,shade,top color=white!10!black,bottom color=white!70!black,shading angle=15](arrow) {};
+\ifthenelse{\equal{#1}{}}{}{\node[right=3mm] at (arrow.north) {\minibox{#1}};}
+%\draw[blue] (current bounding box.north west) rectangle (current bounding box.south east);
+\end{tikzpicture}%
+}
+
+\renewcommand<>\arrowdown[1]{%
+\begin{actionenv}#2%
+\beameroriginal{\arrowdown}{#1}%
+\end{actionenv}%
+}
+
+
+
+\newcommand*\arrowright[1]{%
+\begin{tikzpicture}%
+\node[draw=teal!90!black,very thick,single arrow,anchor=center,minimum width=8mm,minimum height=8mm,outer ysep=0pt,rounded corners=1pt,blur shadow,shade,top color=teal!10,bottom color=teal,shading angle=15](arrow) {};
+\useasboundingbox (current bounding box.north west) (current bounding box.south east);
+\ifthenelse{\equal{#1}{}}{}{\node[right=3mm] at (arrow.north) {\minibox{#1}};}
+\end{tikzpicture}%
+}
+
+\renewcommand<>\arrowright[1]{%
+\begin{actionenv}#2%
+\beameroriginal{\arrowright}{#1}%
+\end{actionenv}%
+}
+
+
+
+\newenvironment<>{beforetrans}[1]{%
+\begin{center}%
+\begin{minipage}{#1}%
+}{%
+\end{minipage}%
+\end{center}%
+}
+
+
+\newenvironment<>{aftertrans}[1]{%
+\begin{overprint}%
+\onslide#2%
+\begin{center}%
+\arrowdown{}%
+\end{center}%
+%
+\begin{center}%
+\begin{minipage}{#1}%
+}{%
+\end{minipage}%
+\end{center}%
+\end{overprint}%
+}
+
+
+
+
+\newcommand*{\qcdsite}[3]{
+\pgfmathparse{(#2==#3) && (#3!=7) && (#2!=0)}
+\ifthenelse{\pgfmathresult=0}{
+	\pgfmathparse{(#2==#3+1 || #2==#3+2 || #2+1==#3 || #2+2==#3) && !((#2==1 && #3==0) || (#2==0 && #3==1))}
+	\ifthenelse{\pgfmathresult=0}{
+		\node[body site](#1-#2-#3) at (#2,#3) {};
+	}{
+		% read site
+		\node[site,fill=cadmiumgreen](#1-#2-#3) at (#2,#3) {};
+	}
+}{
+	% write site
+	\node[site,fill=blue](#1-#2-#3) at (#2,#3) {};
+}	
+}
+
+
+\newcommand{\bracelabelleft}[3]{%
+	\node[fit={#2},outer sep=0mm,inner sep=0mm] (#1 content) {};%
+	\path[draw,decorate,decoration={brace,raise=3pt,amplitude=3pt}] ($(#1 content.south west)+(0,-0.5mm)$) -- ($(#1 content.north west)+(0,0.5mm)$) node[above=1mm,midway,label,sloped] (#1 label) {#3};%
+	\node[fit={#2 (#1 label)},outer sep=0mm,inner sep=0mm] (#1) {};%
+}
+
+
+\newcommand*\named[1]{%
+\ifmmode%
+\text{\textup{#1}}%
+\else%
+\textup{#1}%
+\xspace%
+\fi%
+}
+
+
+
+\newcommand*{\setM}{\mathbb{M}}
+
+
+
+\newcommand{\mydot}[2]{ \node[dot] at (#1,#2) {}; }
+\newcommand{\bluedot}[2]{ \node[bluedot] at (#1,#2) {}; }
+
+
+\newcommand{\awsome}{
+\begin{frame}[plain,time=0]
+\begin{locate}{page cs:x=0.5,y=0.5}
+\includegraphics[height=\paperheight,width=\paperwidth]{awsome}
+\end{locate}
+\end{frame}
+}

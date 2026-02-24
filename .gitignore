@@ -1,0 +1,64 @@
+*.swp
+.directory
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.synctex.gz(busy)
+*.synctex(busy)
+*.nav
+*.vrb
+*.snm
+*.toc
+*.bb
+*.bcf
+*~
+*.backup
+*.dpth
+*.auxlock
+*.run.xml
+*-blx.bib
+*.glo
+*.gls
+*.glg
+*.ist
+*.xdy
+*.pre
+comment.cut
+*.fls
+*.fdb_latexmk
+
+# "List of ..."
+*.loa
+*.lof
+*.lol
+*.lot
+
+# LaTeX Minted temporary files
+_minted-*/
+_minted/
+*.pyg
+*.minted
+
+# temporary files of pdfsizeopt
+pso.*
+
+# Tikz externalize output
+paper-figure*.pdf
+paper-figure*.md5
+
+# make-arxiv.sh output
+arxiv.tgz
+genextern/
+useextern/
+
+# Texmaker session
+# *.tks
+
+# Impressive executable
+#impressive/
+*.pyd
+
+*.cache
