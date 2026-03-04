@@ -476,9 +476,43 @@ for tree={dirtree}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]{Bootstrapping Runtimes Build Mode}
-\begin{itemize}
-\item 
-\end{itemize}
+
+\begin{tightcenter}
+% https://sequencediagram.org/
+% Invert colors & export via Inkscape
+\begin{comment}
+actor User
+participant "CMake\nbuild/" as CMake
+participant "CMake\nbuild/runtimes/runtimes-bins/" as CMake runtimes
+
+User->CMake:cmake -S <llvm-project>/llvm\n  -D LLVM_ENABLE_RUNTIMES=dublin\n  ...
+activate CMake
+space -1
+deactivate CMake
+#CMake->CMake runtimes:create
+
+User->CMake:ninja configure-runtimes
+activate CMake
+space -3
+CMake->CMake:ninja clang FileCheck not ...
+CMake->CMake runtimes:cmake -S <llvm-project>/runtimes\n  -D CMAKE_C_COMPILER=clang\n  -D LLVM_BINARY_DIR=build/\n  -D LLVM_ENABLE_RUNTIMES=dublin\n  ...
+activate CMake runtimes
+space -1
+deactivate CMake runtimes
+deactivate CMake
+
+User->CMake:ninja dublin
+activate CMake
+CMake->CMake runtimes:ninja dublin
+activate CMake runtimes
+space 
+deactivate CMake runtimes
+deactivate CMake
+\end{comment}
+\includegraphics[height=0.9\pageheight]{figs/bootstrapping}
+\end{tightcenter}
+
+
 \end{frame}
 
 
