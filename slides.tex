@@ -482,32 +482,32 @@ for tree={dirtree}
 % Invert colors & export via Inkscape
 \begin{comment}
 actor User
-participant "CMake\nbuild/" as CMake
-participant "CMake\nbuild/runtimes/runtimes-bins/" as CMake runtimes
+participant "build/" as build
+participant "build/runtimes/runtimes-bins/" as runtimes
 
-User->CMake:cmake -S <llvm-project>/llvm\n  -D LLVM_ENABLE_RUNTIMES=dublin\n  ...
-activate CMake
+User->build:cmake -S <llvm-project>/llvm\n  -D LLVM_ENABLE_RUNTIMES=dublin\n  ...
+activate build
 space -1
-deactivate CMake
-#CMake->CMake runtimes:create
+deactivate build
+#build->runtimes:create
 
-User->CMake:ninja configure-runtimes
-activate CMake
+User->build:ninja configure-runtimes
+activate build
 space -3
-CMake->CMake:ninja clang FileCheck not ...
-CMake->CMake runtimes:cmake -S <llvm-project>/runtimes\n  -D CMAKE_C_COMPILER=clang\n  -D LLVM_BINARY_DIR=build/\n  -D LLVM_ENABLE_RUNTIMES=dublin\n  ...
-activate CMake runtimes
+build->build:ninja clang FileCheck not ...
+build->runtimes:cmake -S <llvm-project>/runtimes\n  -D CMAKE_C_COMPILER=clang\n  -D LLVM_BINARY_DIR=build/\n  -D LLVM_ENABLE_RUNTIMES=dublin\n  ...
+activate runtimes
 space -1
-deactivate CMake runtimes
-deactivate CMake
+deactivate runtimes
+deactivate build
 
-User->CMake:ninja dublin
-activate CMake
-CMake->CMake runtimes:ninja dublin
-activate CMake runtimes
-space 
-deactivate CMake runtimes
-deactivate CMake
+User->build:ninja dublin
+activate build
+build->runtimes:ninja dublin
+activate runtimes
+space -1
+deactivate runtimes
+deactivate build
 \end{comment}
 \includegraphics[height=0.9\pageheight]{figs/bootstrapping}
 \end{tightcenter}
@@ -519,9 +519,27 @@ deactivate CMake
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]{Default/Standalone Runtimes Build Mode}
-\begin{itemize}
-\item 
-\end{itemize}
+\framesubtitle{Skip the Middleman}
+
+\begin{tightcenter}
+% Invert pdf using:
+% gswin64 -o standalone-inverted.pdf -sDEVICE=pdfwrite -c "{1 exch sub}{1 exch sub}{1 exch sub}{1 exch sub} setcolortransfer" -f standalone.pdf
+\begin{comment}
+actor User
+participant "build-runtimes/" as runtimes
+
+User->runtimes:cmake -S <llvm-project>/runtimes\n  -D CMAKE_C_COMPILER=clang\n  -D LLVM_BINARY_DIR=build/\n  -D LLVM_ENABLE_RUNTIMES=dublin\n  ...
+activate runtimes
+space -1
+deactivate runtimes
+
+User->runtimes:ninja dublin
+activate runtimes
+space
+deactivate runtimes
+\end{comment}
+\includegraphics[height=0.6\pageheight]{figs/standalone}
+\end{tightcenter}
 \end{frame}
 
 
