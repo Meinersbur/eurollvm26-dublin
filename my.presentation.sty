@@ -2,6 +2,7 @@
 % !TeX root = presentation.tex
 
 
+
 \ifnotes{
 %\setbeameroption{show only notes}  % activates \nofiles
 \beamer@notestrue
@@ -354,6 +355,28 @@
 %\includegraphics[height=8mm]{s/amd-black} 
 %}
 
+
+
+
+\makeatletter
+\newcounter{subseccount}
+
+% 1. Create a label at the exact moment a subsection starts
+\AtBeginSubsection[]{
+  \stepcounter{subseccount}
+  % We use \immediate to ensure the page number is captured RIGHT NOW
+  \immediate\write\@auxout{\string\newlabel{subseclabel:\thesubseccount}{{\thesubseccount}{\thepage}}}
+}
+
+% 2. Create a "dummy" label at the very end of the document
+\AtEndDocument{
+  \stepcounter{subseccount}
+  \immediate\write\@auxout{\string\newlabel{subseclabel:\thesubseccount}{{\thesubseccount}{\thepage}}}
+}
+
+
+
+
 %\begin{comment}
 %\usebackgroundtemplate{\includegraphics[width=\paperwidth,height=\paperheight]{logos/amd-title}}
 \defbeamertemplate*{headline}{mytheme}
@@ -426,20 +449,46 @@
 %  \vskip2pt%
 %}
 
+
+
+
 %\begin{comment}
 \defbeamertemplate*{footline}{mytheme}
 {%
-%\beamer@tempcount=\insertpresentationendpage%
+% The lug that moves as the presentation progresses
 \begin{tikzpicture}[overlay,remember picture]%
 \pgfmathparse{min(1.1,(\insertpagenumber-\insertpresentationstartpage)/(\myinsertpresentationendpage-1))}%
 \path[draw=gray] (page cs:x={\pgfmathresult},y=1) -- +(0,1mm);%
 \end{tikzpicture}%
 %
+%
+% 'nextsub' is the index of the subsection we are LOOKING FOR
+  \edef\nextsub{\the\numexpr\value{subseccount}+1\relax}
+%  
+  % Get the page number of that next subsection from the labels
+  \edef\nextsubpage{\getrefbykeydefault{subseclabel:\nextsub}{page}{0}}
+%  
+  % If the current PDF page is exactly one before the next subsection starts...
+%  \ifnum\thepage=\numexpr\nextsubpage-1\relax
+%    \ifnum\nextsubpage>0\relax % Safety check for 1st compile
+%\begin{tikzpicture}[overlay,remember picture]%
+%\path (page cs:x=0.5,y=0.5) node[font=\Huge ] {XXX};%
+%\end{tikzpicture}%
+%    \fi
+%  \fi
+%  
+%
+%
   \leavevmode%
   \hbox{%
    \begin{beamercolorbox}[wd=0.5\paperwidth,ht=2.25ex,dp=1ex,left]{date in head/foot}%
       \hspace*{3mm}%
-      \usebeamerfont{date in head/foot}\insertframenumber{} / \insertpresentationendframe{}%
+      \usebeamerfont{date in head/foot}
+        \ifnum\thepage=\numexpr\nextsubpage-1\relax% If last slide in the subsection
+              \begin{minipage}{0pt}{\hspace*{-1.5em}\textcolor{gray}{\textbullet}}\end{minipage}\insertframenumber{} / \insertpresentationendframe{}%
+        \else%
+              \insertframenumber{} / \insertpresentationendframe{}%
+        \fi%
       \vspace*{1mm}%
   \end{beamercolorbox}%
   \begin{beamercolorbox}[wd=0.5\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
@@ -460,20 +509,6 @@
 
 
 
-
-
-
-
-
-
-
-
-%\AtBeginSection[]
-%{
-%       \begin{frame}<beamer>{Outline}\slidetime{15}
-%               \tableofcontents[currentsection,hideothersubsections]
-%       \end{frame}
-%}
 
 
 

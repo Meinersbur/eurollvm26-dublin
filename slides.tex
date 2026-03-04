@@ -43,6 +43,7 @@
 
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
@@ -59,20 +60,20 @@
 \includegraphics[width=0.8\pagewidth]{figs/ignorance2.pdf}
 \end{locate}
 
-\begin{locate}<3->[anchor=center,rotate=4]{page cs:x=0.5,y=0.5}
-\includegraphics[width=0.8\pagewidth]{figs/ignorance3}
+\begin{locate}<3->[anchor=center,rotate=4]{page cs:x=0.5,y=0.6}
+\includegraphics[width=0.7\pagewidth]{figs/ignorance3}
 \end{locate}
 
-\begin{locate}<4->[anchor=center,rotate=6]{page cs:x=0.5,y=0.5}
-\includegraphics[width=0.8\pagewidth]{figs/ignorance4}
+\begin{locate}<4->[anchor=center,rotate=6]{page cs:x=0.6,y=0.5}
+\includegraphics[width=0.7\pagewidth]{figs/ignorance4}
 \end{locate}
 
-\begin{locate}<5->[anchor=center,rotate=8]{page cs:x=0.5,y=0.5}
-\includegraphics[width=0.8\pagewidth]{figs/ignorance5}
+\begin{locate}<5->[anchor=center,rotate=8]{page cs:x=0.5,y=0.4}
+\includegraphics[width=0.7\pagewidth]{figs/ignorance5}
 \end{locate}
 
-\begin{locate}<6->[anchor=center,rotate=10]{page cs:x=0.5,y=0.5}
-\includegraphics[width=0.8\pagewidth]{figs/ignorance6}
+\begin{locate}<6->[anchor=center,rotate=10]{page cs:x=0.4,y=0.5}
+\includegraphics[width=0.7\pagewidth]{figs/ignorance6}
 \end{locate}
 
 \begin{locate}<7->[anchor=center,rotate=-4]{page cs:x=0.5,y=0.5}
@@ -90,51 +91,109 @@
 \subsection{History}
 
 \begin{frame}[fragile]{History}
-\begin{itemize}
-\item Initially, each subproject had its own SVN repository
-\item No difference between projects and runtimes
-\item Step 1: \textinline{LLVM_ENABLE_PROJECTS}
-\item Step 2: Sort into tools/<subproject> and runtimes/<subproject> directories
-\item Step 3: \textinline{LLVM_ENABLE_RUNTIMES}
-
-\item \url{https://github.com/llvm/llvm-project/pull/170693#issuecomment-3720262808}
-\item Original proposal: \url{https://lists.llvm.org/pipermail/llvm-dev/2020-October/145997.html}
-\end{itemize}
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{CMake Basics}
-
-\begin{frame}[fragile]{CMake Basics}
-\begin{itemize}[<+->]
-\item Do not use \textinline{set(VAR_NAME)}
-\item Do not use \textinline{if (${VAR_NAME})}
-\end{itemize}
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Rationale}
-\begin{frame}[fragile]{Rationale}
-\begin{itemize}
-\item Compile runtimes using just-built Clang
-\item Compile runtimes for each target platform
+\begin{enumerate}
+\item<1-> Initially, each subproject had its own SVN repository
   \begin{itemize}
-  \item Cross-compilation
+  \item Subprojects categorized as \dquote{tools} (clang: 2009), \dquote{runtime} (libprofile), and \dquote{projects} (e.g. llvm-gcc)
+  \item An example project boilerplate existed
+   %\footnote{\url{https://github.com/llvm/llvm-project/tree/afbe97542f6fbf2b0dac0ede5e8a38ff0b9f24c7/llvm/projects/sample}}
   \end{itemize}
-\item Avoid combinatorial explosion of build modes
-\end{itemize}
+\item<2-> \dquote{runtime} subdirectory disappears with dysfunct PGO removal (2013)
+ 
+\item<3-> Desire to separate runtimes\footnote{\url{https://reviews.llvm.org/D20992}}\footnote{%Original proposal:
+ \url{https://lists.llvm.org/pipermail/llvm-dev/2020-October/145997.html}} (2016--2020)
+  \begin{itemize}
+  \item Somewhat different from compile-time utils/tools/compilers
+  \end{itemize}
+  
+\item<4-> Introduction of \textinline{LLVM_ENABLE_PROJECTS}\footnote{\url{https://reviews.llvm.org/D26365}} (2016)
+\item<4-> Introduction of \textinline{LLVM_ENABLE_RUNTIMES}\footnote{\url{https://reviews.llvm.org/D132478}} (2022)
+  \begin{itemize}
+  \item First for libc++
+  \end{itemize}
+\end{enumerate}
 \end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+%\subsection{CMake Basics}
+%
+%\begin{frame}[fragile]{CMake Basics}
+%\begin{itemize}[<+->]
+%\item Do not use \textinline{set(VAR_NAME)}
+%\item Do not use \textinline{if (${VAR_NAME})}
+%\end{itemize}
+%\end{frame}
+\end{comment}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Rationale}
+\begin{frame}[fragile,shrink=10]{Rationale}
+\framesubtitle{Why \textinline{LLVM_ENABLE_RUNTIMES}?}
+
+\begin{columns}[t]
+\begin{column}{0.31\textwidth}
+\anchor[t]{anw}%
+\begin{block}{Build Host}
+The system we build on
+\begin{itemize}
+\item \shinline{cmake}, \shinline{ninja}, \shinline{cc}, \dots
+\item \shinline{llvm-tblgen}, \shinline{mlir-tblgen}, \dots
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.31\textwidth}
+\begin{block}{Cross-Compile Target}
+Where Clang will run
+\begin{itemize}
+\item \shinline{clang}, \shinline{opt}, \shinline{lld}, \dots
+\item \shinline{LLVMSupport}\{\shinline{.a}/\shinline{.so}\},  \shinline{LLVMPolly.so}, \dots
+\end{itemize}
+\end{block}\anchor[b]{asw}
+\end{column}\anchor[t]{ane}
+\begin{column}{0.31\textwidth}
+\anchor[t]{bnw}%
+\begin{block}{Compiler Target}
+What Clang will compile for
+\begin{itemize}
+\item \shinline{a.out}
+\item compiler-rt, \shinline{libc}, \shinline{libc++}, \dots
+\end{itemize}
+\end{block}\anchor[b]{bsw}
+\end{column}\anchor[t]{bne}
+\end{columns}
+
+\vspace{3ex}
+
+\begin{itemize}
+\item Automate multiple build-steps
+\begin{itemize}
+\item Instead of: Build clang \textrightarrow{} build compiler-rt for x86\_64 \textrightarrow{} build compiler-rt for arm64 \textrightarrow{} \dots
+\end{itemize}
+\item Reduce per-runtime boilerplate/differences between build modes
+\item \alt<-1>{Runtimes compiled (Stage 2) using just-built Clang}{\textcolor{red}{Runtimes compiled (Stage 2) using just-built Clang}}
+\end{itemize}
+
+\begin{tikzpicture}[overlay,remember picture]
+\node<2->[rounded corners,draw=red,fit={(anw) (asw) (ane)},inner xsep=0,inner ysep=-1.5ex, xshift=-1.5mm](stage1) {};
+\node<2->[below=0.5ex of stage1,text=red](stage) {Stage 1};
+
+\node<2->[rounded corners,draw=red,fit={(bnw) (bsw) (bne)},inner xsep=0,inner ysep=-1.5ex, xshift=-1.5mm](stage2) {};
+\node<2->[below=0.5ex of stage2,text=red](stage) {Stage 2};
+\end{tikzpicture}
+
+\end{frame}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Goal}
-\begin{frame}[fragile]{Purpose}
+\begin{frame}[fragile]{Tutorial Runtime}
+\framesubtitle{What is our tutorial runtime going to do?}
 
 \begin{block}{Our Runtime}
 \begin{minted}{c}
@@ -144,12 +203,21 @@ void _dublin_hello_world() {
 \end{minted}
 \end{block}
 
+\bigskip
+
 \begin{itemize}
-\item \cinline{libdublin.a/.so}
-\item Linux Only
-  \begin{itemize}
-  \item No Windows/MacOS/AIX/\dots
-  \end{itemize}
+\item Use LLVM best-practices
+\item Linux only
+%  \begin{itemize}
+%  \item No Windows/MacOS/AIX/\dots
+%  \end{itemize}
+\item Prioritize conciseness over
+\begin{itemize}
+\item \dots{} features
+\item \dots{} comments
+\item \dots{} boilerplate not topic in this tutorial
+\end{itemize}
+\item Point out shortcomings of the current system
 \end{itemize}
 \end{frame}
 
@@ -160,64 +228,283 @@ void _dublin_hello_world() {
 \section{Let's Create a Runtime}
 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 0: Setup}
+\subsection{Setup}
 \begin{frame}[fragile]{Setup}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-0-main}}
 \begin{itemize}
-\item Code found at \url{https://github.com/meinersbur/llvm-dublin}
-\item One branch per step
+\item Update Readme for tutorial
   \begin{itemize}
-  \item Starting point is \url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-0-main}
+  \item \shinline{README.md}
   \end{itemize}
-\item Changes as PR to previous branch
+\item Make git ignore \textinline{install*} subdirs (like \textinline{build*} already is)
+  \begin{itemize}
+  \item \shinline{.gitignore}
+  \end{itemize}
 \end{itemize}
 \end{frame}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 1: Register with the LLVM Build System}
-\begin{frame}[fragile]{Step 1: Register with the LLVM Build System}
+\begin{frame}[fragile]{Register with the LLVM Build System}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-1-basic}}
 \begin{itemize}
-\item 
+\item Allow \shinline{LLVM_ENABLE_RUNTIME=dublin}
+  \begin{itemize}
+  \item \shinline{llvm/CMakeLists.txt}
+  \item \shinline{runtimes/CMakeLists.txt}
+  \end{itemize}
+\item Subproject boilerplate
+  \begin{itemize}
+  \item \shinline{dublin/CMakeLists.txt}
+  \item \shinline{dublin/CODE_OWNERS.TXT}
+  \item \shinline{dublin/LICENSE.TXT}
+  \end{itemize}
 \end{itemize}
 \end{frame}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 2: Build a Library Artifact}
 \begin{frame}[fragile]{Step 2: Build a Library Artifact}
 \begin{itemize}
-\item 
+\item Library source files
+  \begin{itemize}
+  \item \shinline{lib/Dublin/dublin.c}
+  \item \shinline{include/dublin/Dublin/dublin.h}
+  \end{itemize}
+\item Build \shinline{libdublin.a}
+  \begin{itemize}
+  \item \textinline{add_executable(dublin dublin.c)}
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
 
+
+\forestset{dirtree/.style={s sep=1mm,font=\footnotesize,
+    font=\ttfamily,
+    grow'=0,
+    child anchor=west,
+    parent anchor=south,
+    anchor=west,
+    calign=first,
+    edge path={
+      \noexpand\path [draw, \forestoption{edge}]
+      (!u.south west) +(7.5pt,0) |- node[fill,inner sep=1.25pt] {} (.child anchor)\forestoption{edge label};
+    },
+    before typesetting nodes={
+      if n=1
+        {insert before={[,phantom]}}
+        {}
+    },
+    fit=band,
+    before computing xy={l=15pt},
+    }}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 3}
-\begin{frame}[fragile]{Add an Example that uses the Library}
+\begin{frame}[fragile]{Standard Subproject Layout}
+\begin{scaleenv}{0.6}
+\begin{columns}[t]
+\begin{column}[t]{0.5\textheight}
+\begin{forest}
+for tree={dirtree}
+[subproject, font=\sffamily
+  [docs
+    [{*.rst, *.md}]
+  ]
+  [examples
+    [Example1
+      [{*.c, *.cpp}]
+    ]
+  ]
+  [test
+    [Unit
+      [{lit.cfg.py, lit.site.cfg.py.in}]
+    ]
+    [Component1, font=\sffamily
+      [{*}]
+    ]
+    [Component2, font=\sffamily
+      [{*}]
+    ]
+    [{lit.cfg.py, lit.site.cfg.py.in}]
+  ]
+  [unittests
+    [Component1, font=\sffamily
+      [Component1Test.cpp]
+    ]
+    [Component2, font=\sffamily
+      [Component1Test.cpp]
+    ]
+  ]
+]
+\end{forest}
+\end{column}
+\begin{column}[t]{0.5\textheight}
+\begin{forest}
+for tree={dirtree}
+[
+  [cmake
+    [Modules/modules
+      [*.cmake]
+    ]
+    [caches
+      [*.cmake]
+    ]
+  ]
+  [include
+    [subproject, font=\sffamily
+      [Component1, font=\sffamily
+        [component1.h]
+      ]
+      [Component2, font=\sffamily
+        [component2.h]
+      ]
+    ]
+  ]
+  [lib
+    [Component1, font=\sffamily
+      [component1.c]
+      [component1-internal.h]
+    ]
+    [Component2, font=\sffamily
+      [component2.c]
+    ]
+  ]
+  [utils
+    [utility, font=\sffamily
+      [utility.cpp]
+    ]
+  ]
+]
+\end{forest}
+\end{column}
+\end{columns}
+\end{scaleenv}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Step 3: An Example that uses the Library}
+\begin{frame}[fragile]{An Example that uses the Library}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-3-example}}
 \begin{itemize}
-\item 
+\item Example source
+  \begin{itemize}
+  \item \shinline{examples/dublin-hello/dublin-hello.c}
+  \end{itemize}
+\item Build instructions
+  \begin{itemize}
+  \item \shinline{examples/dublin-hello/CMakeLists.txt}
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 4}
+\subsection{Step 4: Build Modes}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-4-modes}}
 \begin{frame}[fragile]{Build Modes}
 \begin{itemize}
-\item Bootstrapping runtimes
-\item Runtimes standalone
-\item Runtimes standalone with an LLVM install dir
-\item Runtimes standalone without an LLVM build
+\item Detecting Legacy Build Modes
+  \begin{itemize}
+  \item \shinline{CMakeLists.txt}
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 5}
+\begin{frame}[fragile,shrink=20]{Build Modes}
+
+%\begin{columns}[t]
+%\begin{column}{0.48\textwidth}
+%
+%\end{column}
+%\begin{column}{0.48\textwidth}
+%
+%\end{column}
+%\end{columns}
+
+
+\vspace*{6ex}
+
+\begin{block}{Legacy Build Modes}
+%\begin{itemize}
+%\item Standalone: \shinline{cmake -S dublin}
+%\item As Project: \shinline{cmake -S llvm -DLLVM_ENABLE_PROJECTS=dublin}
+%\end{itemize}
+\begin{tabular}{llll}
+\textbf{As project:} & \shinline{cmake} & \shinline{-S <llvm-project>/llvm}   & \shinline{-D LLVM_ENABLE_PROJECTS=dublin}\\
+\textbf{Standalone:} & \shinline{cmake} & \shinline{-S <llvm-project>/dublin} & \\
+\end{tabular}
+\medskip
+\begin{itemize}
+\item Intended to be superseded by runtimes build modes\footnote{\url{https://lists.llvm.org/pipermail/llvm-dev/2020-October/145997.html}}
+\item If your build infrastructure still uses this, please consider updating
+\end{itemize}
+\end{block}
+
+
+\begin{block}{Runtimes Build Modes}
+%\begin{itemize}
+%\item Bootstrapping:      \shinline{cmake -S llvm -DLLVM_ENABLE_RUNTIMES=dublin}
+%\item Default/Standalone: \shinline{cmake -S runtimes -DLLVM_ENABLE_RUNTIMES=dublin}
+%\end{itemize}
+\begin{tabular}{llll}
+\textbf{Bootstrapping:}      & \shinline{cmake} & \shinline{-S <llvm-project>/llvm} & \shinline{-D LLVM_ENABLE_RUNTIMES=dublin}\\
+\textbf{Default/Standalone:} & \shinline{cmake} & \shinline{-S <llvm-project>/runtimes} & \shinline{-D LLVM_ENABLE_RUNTIMES=dublin}\\
+\end{tabular}
+\medskip
+\begin{itemize}
+\item Shared+common boilerplate code in \shinline{<llvm-project>/runtimes/CMakeLists.txt}
+\end{itemize}
+\end{block}
+
+% Build Modes: \url{https://github.com/llvm/llvm-project/pull/170693#issuecomment-3720262808}
+\end{frame}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Bootstrapping Runtimes Build Mode}
+\begin{itemize}
+\item 
+\end{itemize}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Default/Standalone Runtimes Build Mode}
+\begin{itemize}
+\item 
+\end{itemize}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Step 5: CMake Cache Files}
+\begin{frame}[fragile]{CMake Cache Files}
+\begin{itemize}
+\item 
+\end{itemize}
+\end{frame}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Step 6: Artifact Output Location}
 \begin{frame}[fragile]{Artifact Output Location}
 \begin{itemize}
 \item 
@@ -226,21 +513,8 @@ void _dublin_hello_world() {
 
 
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 6}
-\begin{frame}[fragile]{Shared and Static Libraries}
-\begin{itemize}
-\item Add a Configuration option
-\item 
-\end{itemize}
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 7}
+\subsection{Step 7: Installation}
 \begin{frame}[fragile]{Installation}
 \begin{itemize}
 \item 
@@ -250,8 +524,20 @@ void _dublin_hello_world() {
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 8}
-\begin{frame}[fragile]{Add a Regression Test}
+\subsection{Step 8: Shared and Static Libraries}
+\begin{frame}[fragile]{Shared and Static Libraries}
+\begin{itemize}
+\item Add a Configuration option
+\item 
+\end{itemize}
+\end{frame}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Step 9: Regression Tests}
+\begin{frame}[fragile]{Regression Tests}
 \begin{itemize}
 \item 
 \end{itemize}
@@ -260,8 +546,8 @@ void _dublin_hello_world() {
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 9}
-\begin{frame}[fragile]{Add a Unittest}
+\subsection{Step 10: Unittests}
+\begin{frame}[fragile]{Unittests}
 \begin{itemize}
 \item 
 \end{itemize}
@@ -270,7 +556,7 @@ void _dublin_hello_world() {
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 10}
+\subsection{Step 11: Sphinx Docs}
 \begin{frame}[fragile]{Sphinx Docs}
 \begin{itemize}
 \item 
@@ -279,7 +565,7 @@ void _dublin_hello_world() {
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 11}
+\subsection{Step 12: Doxygen Docs}
 \begin{frame}[fragile]{Doxygen Docs}
 \begin{itemize}
 \item 
@@ -287,8 +573,10 @@ void _dublin_hello_world() {
 \end{frame}
 
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 12}
+\subsection{Step 13: Cross-Compilation}
 \begin{frame}[fragile]{Cross-Compilation}
 \begin{itemize}
 \item 
@@ -296,33 +584,32 @@ void _dublin_hello_world() {
 \end{frame}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 13}
-\begin{frame}[fragile]{Depending on Other LLVM Libraries}
-\begin{itemize}
-\item 
-\end{itemize}
-\end{frame}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 14}
-\begin{frame}[fragile]{Using C++ in a Runtime}
-\begin{itemize}
-\item 
-\end{itemize}
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 15}
+\subsection{Step 14: Accelerator Offloading}
 \begin{frame}[fragile]{Accelerator Offloading}
 \begin{itemize}
 \item 
 \end{itemize}
 \end{frame}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Step 15: Depending on Other LLVM Libraries / C++}
+\begin{frame}[fragile]{Depending on Other LLVM Libraries / C++} 
+\begin{itemize}
+\item 
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Step ?}
+\begin{frame}[fragile]{Platform Introspection}
+\begin{itemize}
+\item 
+\end{itemize}
+\end{frame}
 
 
 
@@ -361,6 +648,7 @@ void _dublin_hello_world() {
 \item GPUs like any other target
 \item Fat libraries
 \item Get rid of \cinline{LLVM_ENABLE_PER_TARGET_RUNTIME_DIR}
+\item QEMU (\textinline{CMAKE_CROSSCOMPILING_EMULATOR})
 \item \dots
 \end{itemize}
 \end{frame}
@@ -377,6 +665,8 @@ void _dublin_hello_world() {
 \item I currently cannot recommend working on improving the system, waste of your time
 \end{itemize}
 \end{frame}
+
+
 
 
 
