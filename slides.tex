@@ -479,7 +479,8 @@ for tree={dirtree}
 
 \begin{tightcenter}
 % https://sequencediagram.org/
-% Invert colors & export via Inkscape
+% Inkscape: remove background & export pdf
+% gswin64 -o bootstrapping-inverted.pdf -sDEVICE=pdfwrite -c "{1 exch sub}{1 exch sub}{1 exch sub}{1 exch sub} setcolortransfer" -f bootstrapping.pdf
 \begin{comment}
 actor User
 participant "build/" as build
@@ -505,11 +506,11 @@ User->build:ninja dublin
 activate build
 build->runtimes:ninja dublin
 activate runtimes
-space -1
+space 
 deactivate runtimes
 deactivate build
 \end{comment}
-\includegraphics[height=0.9\pageheight]{figs/bootstrapping}
+\includegraphics[height=0.9\pageheight]{figs/bootstrapping-inverted}
 \end{tightcenter}
 
 
@@ -538,7 +539,7 @@ activate runtimes
 space
 deactivate runtimes
 \end{comment}
-\includegraphics[height=0.6\pageheight]{figs/standalone}
+\includegraphics[height=0.6\pageheight]{figs/standalone-inverted}
 \end{tightcenter}
 \end{frame}
 
