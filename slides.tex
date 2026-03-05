@@ -621,7 +621,7 @@ endforeach ()
 \begin{frame}[fragile]{Artifact Output Location}
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-6-location}}
 \begin{itemize}
-\item[\pgfuseimage{file}] \shinline{cmake/Modules/GetToolchainDirs.cmake}
+\item[\pgfuseimage{file}] \shinline{CMakeLists.txt}, \shinline{cmake/Modules/GetToolchainDirs.cmake}
   \begin{itemize}
   \item Determine standard locations 
   \end{itemize}
@@ -633,12 +633,90 @@ endforeach ()
 \end{frame}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Library Locations}
+\framesubtitle{\shinline{LLVM_ENABLE_PER_TARGET_RUNTIME_DIR=ON}}
+%\begin{scaleenv}{0.6}
+\vspace*{-\baselineskip}
+\begin{columns}[t]
+\begin{column}[t]{0.48\textwidth}
+\begin{block}{Prefix Dir}
+\begin{minipage}[t][48mm][t]{\textwidth}
+\begin{tightcenter}
+\begin{forest}
+for tree={dirtree}
+[{\$PREFIX}
+  [bin
+    [clang]
+  ]
+  [lib
+    [<triple>, font=\sffamily
+      [{*.so, *.a}]
+    ]
+  ]
+]
+\end{forest}
+\end{tightcenter}
+\end{minipage}
+\begin{itemize}
+\item Accessible to any compiler
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}[t]{0.48\textwidth}
+\begin{block}{Resource Dir}
+%\begin{minipage}[t][20mm][t]{\textwidth}
+\begin{tightcenter}
+\begin{forest}
+for tree={dirtree}
+[{\$PREFIX}
+  [bin
+    [clang]
+  ]
+  [lib
+    [clang
+      [<version>, font=\sffamily
+        [lib
+          [<triple>, font=\sffamily
+            [{*.a}]
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+\end{forest}
+\end{tightcenter}
+%\vspace*{-30mm}
+%\end{minipage}
+\begin{itemize}
+\item Accessible only for this version of Clang (and Flang)
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+%\end{scaleenv}
+\end{frame}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 7: Installation}
 \begin{frame}[fragile]{Installation}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-7-install}}
 \begin{itemize}
-\item 
+\item[\pgfuseimage{file}] \shinline{CMakeLists.txt}
+  \begin{itemize}
+  \item Set install output location
+  \end{itemize}
+\item[\pgfuseimage{file}] \shinline{lib/Dublin/CMakeLists.txt}
+  \begin{itemize}
+  \item Library installation
+  \end{itemize}
+\item[\pgfuseimage{file}] \shinline{include/CMakeLists.txt}
+  \begin{itemize}
+  \item Header installation
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -647,20 +725,98 @@ endforeach ()
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 8: Shared and Static Libraries}
 \begin{frame}[fragile]{Shared and Static Libraries}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-8-shared}}
 \begin{itemize}
-\item Add a Configuration option
-\item 
+\item[\pgfuseimage{file}] \shinline{cmake/Modules/AddDublin.cmake}
+  \begin{itemize}
+  \item If building Shared and Static library, use an OBJECT library
+  \end{itemize}
+\item[\pgfuseimage{file}] \shinline{lib/Dublin/CMakeLists.txt}
+  \begin{itemize}
+  \item Use \textinline{add_dublin_library} from \shinline{AddDublin.cmake}
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile,shrink=20]{OBJECT Libraries}
+\begin{tightcenter}
+\begin{tikzpicture}
+\tikzset{node/.style={draw=teal,line width=1.2pt,rounded corners,top color=teal!50,bottom color=white,shading angle=15,blur shadow}}
+\tikzset{edge/.style={->}}
+
+
+\tikzset{supernode/.style={subgraph text none,draw=white,rounded corners}}
+\tikzset{filenode/.style={minimum width=7mm,minimum height=1cm,align=flush left,grow=right,draw,shape=file,fill=white}}
+
+\graph[layered layout,edges={edge,rounded corners},level sep=70mm,sibling sep=40mm,grow=right]{
+%
+objectlib [subgraph text none] // [sibling sep=2mm,level sep=-40mm,grow=down,layered layout] {
+  source[filenode,as={},label={\texttt{dublin.c}}];
+  object[filenode,as={},label={below:\texttt{dublin.o}}];
+  source -> object;
+};
+%
+sharedlib [subgraph text none] // [sibling sep=2mm,level sep=5mm,grow=down,layered layout] {
+  shobject[filenode,as={},label={\texttt{dublin.o}}];
+};
+%
+staticlib [subgraph text none] // [sibling sep=2mm,level sep=5mm,grow=down,layered layout] {
+  stobject[filenode,as={},label={\texttt{dublin.o}}];
+};
+%
+objectlib ->[draw=none] sharedlib;
+objectlib ->[draw=none] staticlib;
+%sharedlib ->[draw=red] staticlib;
+%
+%{[same layer] sharedlib, sharedlib }
+%
+object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize}] shobject;
+object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize}] stobject;
+%
+};
+
+\begin{pgfonlayer}{background}
+\node[fit={(objectlib)},supernode,inner sep=8mm,label={[font=\Large\sffamily]above:OBJECT library}]{};
+\node[fit={(sharedlib)},supernode,inner sep=8mm,label={[font=\Large\sffamily,align=center]above:SHARED library\\\texttt{libdublin.so}}]{};
+\node[fit={(staticlib)},supernode,inner sep=8mm,label={[font=\Large\sffamily,align=center]above:STATIC library\\\texttt{libdublin.a}}]{};
+\end{pgfonlayer}
+\end{tikzpicture}
+\end{tightcenter}
+\end{frame}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 9: Regression Tests}
-\begin{frame}[fragile]{Regression Tests}
+\subsection{Step 9: Regression Testing}
+\begin{frame}[fragile]{Regression Testing}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-9-test}}
 \begin{itemize}
-\item 
+ \item[\pgfuseimage{file}] \shinline{dublin/test/Dublin/dublin-hello.c}
+    \begin{itemize}
+    \item The regression test:
+      \begin{itemize}
+      \item Build the source
+      \item Link to \shinline{libdublin}(\shinline{.a}/\shinline{.so})
+      \item Run
+      \item Expect output: \dquote{Dia daoibh, a dhomhain!}
+      \end{itemize}
+    \end{itemize}
+\item[\pgfuseimage{file}] \shinline{dublin/test/CMakeLists.txt}
+  \begin{itemize}
+  \item Testing boilerplate
+  \end{itemize}
+ \item[\pgfuseimage{file}] \shinline{dublin/test/lit.cfg.py},  \shinline{dublin/test/lit.site.cfg.py.in}, 
+    \begin{itemize}
+    \item \shinline{llvm-lit} configuration
+      \begin{itemize}
+      \item How to find regression tests (\textinline{lit.formats.ShTest})
+      \item Setup execution environment
+      \item Forward build configuration
+      \end{itemize}
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -669,9 +825,20 @@ endforeach ()
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 10: Unittests}
 \begin{frame}[fragile]{Unittests}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-10-unittest}}
 \begin{itemize}
-\item 
-\end{itemize}
+\item[\pgfuseimage{file}] \shinline{dublin/test/Unit/lit.cfg.py}, \shinline{dublin/test/Unit/lit.site.cfg.py.in}
+    \begin{itemize}
+    \item \shinline{llvm-lit} configuration
+      \begin{itemize}
+      \item How to find unittests (\textinline{lit.formats.GoogleTest})
+      \end{itemize}
+    \end{itemize}
+\item[\pgfuseimage{file}] \shinline{dublin/unittests/CMakeLists.txt}
+    \begin{itemize}
+    \item Unittest (Google Test-based) executable build instructions
+    \end{itemize}
+\end{itemize}a
 \end{frame}
 
 
