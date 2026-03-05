@@ -242,6 +242,11 @@ void _dublin_hello_world() {
   \item \shinline{.gitignore}
   \end{itemize}
 \end{itemize}
+
+\begin{minted}{sh}
+alias cmake='cmake -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON'
+\end{minted}
+
 \end{frame}
 
 
@@ -513,7 +518,6 @@ deactivate build
 \includegraphics[height=0.9\pageheight]{figs/bootstrapping-inverted}
 \end{tightcenter}
 
-
 \end{frame}
 
 
@@ -544,23 +548,87 @@ deactivate runtimes
 \end{frame}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Default/Standalone Runtimes Build Mode}
+
+\begin{block}{\shinline{runtimes/CMakeLists.txt}}
+\begin{minted}{cmake}
+project(Runtimes C CXX ASM)
+
+find_package(LLVM HINT ${LLVM_BINARY_DIR})
+# more boilerplate code
+
+foreach (runtime ${LLVM_ENABLE_RUNTIMES})
+  add_subdirectory(${runtime})
+endforeach ()
+\end{minted}
+\end{block}
+
+
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile,shrink=5]{Bootstrapping Build Mode}
+
+\begin{block}{\shinline{llvm/runtimes/CMakeLists.txt}}
+\begin{itemize}
+\item Configure nested builddirs
+  \begin{itemize}
+  \item \shinline{runtimes/buitins-bins} for Compiler-RT
+  \item \shinline{runtimes/runtimes-bins}
+  \end{itemize}
+\item Forward configuration parameters
+  \begin{itemize}
+  \item Selected configuration options (e.g. \shinline{LLVM_INCLUDE_TESTS})
+  \item Any option that starts with the capitalized runtime name (i.e. \textinline{DUBLIN_*})
+  \item The content of \textinline{RUNTIMES_CMAKE_ARGS}\itemremark{e.g. \shinline{-DRUNTIMES_CMAKE_ARGS="-DCMAKE_CXX_FLAGS=-ferror-limit=1"}}
+  \end{itemize}
+\item Build prerequisites
+  \begin{itemize}
+  \item Test infrastructure: \shinline{llvm-lit}, \shinline{FileCheck}, \shinline{not}, \dots
+  \item Compilers: Clang, Flang (if enabled via \textinline{CMAKE_ENABLE_PROJECTS})
+  \end{itemize}
+\item Build targets for the nested builddir(s)
+  \begin{itemize}
+  \item Control targets: \shinline{configure-runtimes}, \shinline{install-runtimes}, \shinline{clean-runtimes}, \dots
+  \item Added dependency: \shinline{all}, \shinline{install}
+  \item Just forwarded: \shinline{dublin}, \shinline{check-dublin}, \shinline{runtimes} \textrightarrow{} \shinline{all}
+  \end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 5: CMake Cache Files}
 \begin{frame}[fragile]{CMake Cache Files}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-5-cachefiles}}
 \begin{itemize}
-\item 
+\item \shinline{cmake/caches/runtimes-bins.cmake}
+  \begin{itemize}
+  \item Pre-populated CMake parameters as a bootstrapping build would set them
+  \end{itemize}
 \end{itemize}
 \end{frame}
-
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 6: Artifact Output Location}
 \begin{frame}[fragile]{Artifact Output Location}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-6-location}}
 \begin{itemize}
-\item 
+\item[\pgfuseimage{file}] \shinline{cmake/Modules/GetToolchainDirs.cmake}
+  \begin{itemize}
+  \item Determine standard locations 
+  \end{itemize}
+\item[\pgfuseimage{file}] \shinline{lib/Dublin/CMakeLists.txt}
+  \begin{itemize}
+  \item Set artifact output location
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
