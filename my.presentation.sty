@@ -1,7 +1,10 @@
 % !TeX encoding = UTF-8
 % !TeX root = presentation.tex
 
-
+%\defaultfontfeatures{Scale = MatchLowercase}
+%\setmainfont{TeX Gyre Heros}[Scale = 1.0]
+%\usepackage[scaled]{helvet}
+\setmainfont{FreeSans}
 
 \ifnotes{
 %\setbeameroption{show only notes}  % activates \nofiles
@@ -76,7 +79,12 @@
 %
 % Font Themes
 %\usefonttheme{default}
-%\usefonttheme{professionalfonts}
+\usefonttheme{professionalfonts}
+\setsansfont{FreeSans}[
+    BoldFont={FreeSans Bold},
+    ItalicFont={FreeSans Oblique},
+    BoldItalicFont={FreeSans Bold Oblique}
+]
 %\usefonttheme{serif}
 %\usefonttheme{structurebold}
 %\usefonttheme{structureitalicserif}
@@ -108,11 +116,9 @@
 %\xdefinecolor{accentcolor}{RGB}{5 134 162}
 \xdefinecolor{accentcolor}{named}{white}
 %\xdefinecolor{accentcolor}{RGB}{140 140 140}
-%\xdefinecolor{accentcolor}{named}{white}
 \xdefinecolor{papercolor}{named}{black}
 %\xdefinecolor{papercolor}{RGB}{10 10 10}
 \usefonttheme[]{structurebold}
-
 
 
 \setbeamercolor{background canvas}{bg=papercolor}
@@ -377,6 +383,7 @@
 
 
 
+
 %\begin{comment}
 %\usebackgroundtemplate{\includegraphics[width=\paperwidth,height=\paperheight]{logos/amd-title}}
 \defbeamertemplate*{headline}{mytheme}
@@ -398,18 +405,35 @@
 %\end{comment}
 
 
+
+\setbeamerfont{title}{size=\LARGE,series=\bfseries}
+\setbeamerfont{author}{size=\small,series=\bfseries}
+
+
+\defbeamertemplate*{title page}{mytheme}
+{%
+\begin{columns}
+\begin{column}[]{0.43\textwidth}
+\end{column}
+\begin{column}[c]{0.57\textwidth}
+{\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle}\\[5ex]
+{\usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor}
+\end{column}
+\end{columns}
+%
+\begin{locate}[anchor=south east]{page cs:x=0.92,y=0.92}
+\includegraphics[width=0.2\pagewidth]{logos/amd-logo-black}
+\end{locate}
+}
+
+
+
 \defbeamertemplate*{frametitle}{mytheme}
 {%
   \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
   \@tempdima=\textwidth%
-%\advance\@tempdima by\beamer@leftmargin%
-%\advance\@tempdima by\beamer@rightmargin%
-%\vspace*{3mm}
-%\fbox{%
   \begin{beamercolorbox}[wd=\the\@tempdima]{frametitle}%
     \usebeamerfont{frametitle}%
-    %\vbox{}\vskip-1ex%
-    %\if@tempswa\else\csname beamer@fteleft\endcsname\fi%
     \strut\insertframetitle\strut\par%
     {%
       \ifx\insertframesubtitle\@empty%
@@ -419,13 +443,9 @@
       \vskip-1.0ex%
       \fi%
     }%
-%   \vskip-1.5ex%
-    %\if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
   \end{beamercolorbox}%
-%}%\vspace*{-1ex} %
 \vskip-1ex%
-\rule{\textwidth}{0.1pt}%
-%\vskip-1ex%
+%\rule{\textwidth}{0.1pt}%
 }
 
 
@@ -485,9 +505,9 @@
       \hspace*{3mm}%
       \usebeamerfont{date in head/foot}
         \ifnum\thepage=\numexpr\nextsubpage-1\relax% If last slide in the subsection
-              \begin{minipage}{0pt}{\hspace*{-1.5em}\textcolor{gray}{\textbullet}}\end{minipage}\insertframenumber{} / \insertpresentationendframe{}%
+              \begin{minipage}{0pt}{\hspace*{-1.5em}\textcolor{gray}{\textbullet}}\end{minipage}\insertframenumber{}% / \insertpresentationendframe{}
         \else%
-              \insertframenumber{} / \insertpresentationendframe{}%
+              \insertframenumber{}% / \insertpresentationendframe{}
         \fi%
       \vspace*{1mm}%
   \end{beamercolorbox}%

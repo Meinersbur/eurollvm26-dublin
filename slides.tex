@@ -31,6 +31,7 @@
 \AtBeginSection[]
 {
   \begin{frame}[shrink]{Outline}
+    \vspace*{5ex}
     \tableofcontents[currentsection,hideothersubsections]
   \end{frame}
 }
@@ -38,6 +39,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[shrink]{Outline}
+\vspace*{2ex}
 \tableofcontents[hideallsubsections]
 \end{frame}
 
@@ -233,20 +235,27 @@ void _dublin_hello_world() {
 \begin{frame}[fragile]{Setup}
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-0-main}}
 \begin{itemize}
-\item Update Readme for tutorial
+\item[\pgfuseimage{file}] \shinline{README.md}
   \begin{itemize}
-  \item \shinline{README.md}
+  \item Update Readme for tutorial
   \end{itemize}
-\item Make git ignore \textinline{install*} subdirs (like \textinline{build*} already is)
+\item[\pgfuseimage{file}] \shinline{.gitignore}
   \begin{itemize}
-  \item \shinline{.gitignore}
+  \item Make git ignore \textinline{install*} subdirs \itemremark{(like \textinline{build*} already is)}
   \end{itemize}
 \end{itemize}
 
-\begin{minted}{sh}
-alias cmake='cmake -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON'
-\end{minted}
+\medskip
 
+\begin{block}{\shinline{$HOME/bin/cmake}}
+\begin{minted}{sh}
+/usr/bin/cmake -G Ninja                               \
+               -D CMAKE_C_COMPILER_LAUNCHER=ccache    \
+               -D CMAKE_CXX_COMPILER_LAUNCHER=ccache  \
+               -D CMAKE_DISABLE_PRECOMPILE_HEADERS=ON \
+               "$@"
+\end{minted}
+\end{block}
 \end{frame}
 
 
@@ -827,18 +836,18 @@ object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize
 \begin{frame}[fragile]{Unittests}
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-10-unittest}}
 \begin{itemize}
-\item[\pgfuseimage{file}] \shinline{dublin/test/Unit/lit.cfg.py}, \shinline{dublin/test/Unit/lit.site.cfg.py.in}
+\item[\pgfuseimage{file}] \shinline{unittests/Dublin/DublinTest.cpp}
+    \begin{itemize}
+    \item Google Test-based test code
+    \end{itemize}
+\item[\pgfuseimage{file}] \shinline{test/Unit/lit.cfg.py}, \shinline{test/Unit/lit.site.cfg.py.in}
     \begin{itemize}
     \item \shinline{llvm-lit} configuration
       \begin{itemize}
       \item How to find unittests (\textinline{lit.formats.GoogleTest})
       \end{itemize}
     \end{itemize}
-\item[\pgfuseimage{file}] \shinline{dublin/unittests/CMakeLists.txt}
-    \begin{itemize}
-    \item Unittest (Google Test-based) executable build instructions
-    \end{itemize}
-\end{itemize}a
+\end{itemize}
 \end{frame}
 
 
@@ -846,28 +855,71 @@ object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 11: Sphinx Docs}
 \begin{frame}[fragile]{Sphinx Docs}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-11-docs}}
 \begin{itemize}
-\item 
+\item[\pgfuseimage{file}] \shinline{docs/index.md}
+    \begin{itemize}
+    \item The documentation
+    \end{itemize}
+\item[\pgfuseimage{file}] \shinline{docs/conf.py}, \shinline{docs/CMakeLists.txt}
+    \begin{itemize}
+    \item Sphinx configuration
+    \end{itemize}
+\item[\pgfuseimage{dir}] \shinline{docs/_theme}
+    \begin{itemize}
+    \item HTML boilerplate
+    \end{itemize}
 \end{itemize}
 \end{frame}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 12: Doxygen Docs}
 \begin{frame}[fragile]{Doxygen Docs}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-12-doxygen}}
 \begin{itemize}
-\item 
+\item[\pgfuseimage{file}] \shinline{lib/Dublin/dublin.c}
+  \begin{itemize}
+  \item Add Doxygen comment
+  \end{itemize}
+\item[\pgfuseimage{file}] \shinline{docs/doxygen-mainpage.dox}
+  \begin{itemize}
+  \item Doxygen frontpage content
+  \end{itemize}
+\item[\pgfuseimage{file}] \shinline{docs/doxygen.cfg.in}, \shinline{docs/CMakeLists.txt}
+  \begin{itemize}
+  \item Doxygen configuration
+  \end{itemize}
 \end{itemize}
 \end{frame}
-
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 13: Cross-Compilation}
 \begin{frame}[fragile]{Cross-Compilation}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-13-cross}}
+%\begin{itemize}
+%\item
+No modifications necessary
+%\end{itemize}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile,shrink=15]{Cross-Compilation}
+
+\vspace*{12ex}
+
 \begin{itemize}
-\item 
+\item \shinline{-D LLVM_RUNTIME_TARGETS="default;aarch64-linux-gnu"}
+  \itemremark{Compile runtimes also for arm64}
+\item \shinline{-D RUNTIMES_CMAKE_ARGS=-DLLVM_USE_LINKER=lld}
+  \itemremark{Ubuntu's default \shinline{ld.bfd} does not support arm64}
+\item \shinline{-D RUNTIMES_aarch64-linux-gnu_ZLIB_LIBRARY=/usr/lib/aarch64-linux-gnu/libz.a}
+  \itemremark{CMake \textinline{find_package(ZLIB)} may not find multilib libraries}
 \end{itemize}
 \end{frame}
 
@@ -876,21 +928,42 @@ object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 14: Accelerator Offloading}
 \begin{frame}[fragile]{Accelerator Offloading}
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-14-offload}}
 \begin{itemize}
-\item 
+\item[\pgfuseimage{file}] \shinline{CMakeLists.txt}, \shinline{cmake/Modules/AddDublin.cmake}
+  \begin{itemize}
+  \item Accommodate imitations of GPGPU targets
+  \end{itemize}
+\item[\pgfuseimage{dir}] \shinline{examples/dublin-offload}
+  \begin{itemize}
+  \item Demonstrate OpenMP offloading
+  \end{itemize}
 \end{itemize}
 \end{frame}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step 15: Depending on Other LLVM Libraries / C++}
-\begin{frame}[fragile]{Depending on Other LLVM Libraries / C++} 
+\begin{frame}[fragile,shrink=5]{Depending on Other LLVM Libraries / C++} 
+\framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-15-deps}}
+
+\vspace*{12ex}
+
 \begin{itemize}
-\item 
+\item[\pgfuseimage{file}] \shinline{lib/Dublin/dublin.cpp}, \shinline{include/dublin/Dublin/dublin.h}, \shinline{examples/dublin-hello/dublin-hello.cpp}
+  \begin{itemize}
+  \item Convert to C++
+  \end{itemize}
+\item[\pgfuseimage{file}] \shinline{cmake/Modules/AddDublin.cmake}, \shinline{third-party/unittest/CMakeLists.txt}
+  \begin{itemize}
+  \item Link to libc++, regardless of compiler default
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
 
+\begin{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step ?}
 \begin{frame}[fragile]{Platform Introspection}
@@ -902,16 +975,35 @@ object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Step ?}
+\begin{frame}[fragile]{Module Export}
+\begin{itemize}
+\item 
+\end{itemize}
+\end{frame}
+\end{comment}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{And They Lived Happily\dots}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Are We Done Yet?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{More Topics}
 
-\begin{frame}[fragile]{Uncovered Topics}
+\begin{frame}[fragile]{Not Covered Topics}
 \begin{itemize}
-\item Platform Support: Windows/MacOS/AIX/Fuchsia/\dots
-\item Multilib
+\item Platform Introspection 
+    \itemremark{\textinline{check_source_compiles}}
+\item Platform Support 
+    \itemremark{Windows/MacOS/AIX/Fuchsia/\dots}
+\item Multilib 
+    \itemremark{ \shinline{lib32}/\shinline{lib64}}
+\item Export libraries 
+    \itemremark{\textinline{find_package(Dublin)}}
+\item Continuous Integration
+\item Fortran
 \item \dots
 \end{itemize}
 \end{frame}
@@ -920,29 +1012,35 @@ object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Build System Improvements}
+\begin{frame}[fragile,shrink]{Potential Runtimes Build Improvements}
+\begin{itemize}
+\item<+-> Inform LLVM developers and OS distributions
+    \itemremark{(Build modes) developer documentation missing, runtime template}
+\item<+-> Make \textinline{RUNTIMES_*} options discoverable
+    \itemremark{\textinline{set(RUNTIMES_CMAKE_ARGS "" CACHE STRING "Help")}}
+\item<+-> Unify the CMake code of all runtimes
+     \itemremark{Boilerplate diverged significantly since the SVN days}
+\item<+-> Fat libraries support
+  \itemremark{MacOS Universal Binaries, \textinline{arm64ec}, Offload, \dots}
+\item<+-> Reduce special cases
+     \begin{itemize}
+     \item GPGPU targets
+     \item \textinline{LLVM_RUNTIME_TARGETS=default}
+     \item Compiler-RT \dquote{builtins}
+     \end{itemize}
 
-\begin{frame}[fragile]{Future Improvements}
-\begin{itemize}[<+->]
-\item Inform LLVM developers and distributions
-\item \cinline{LLVM_ENABLE_RUNTIMES} Documentation
-\item Propagate \textinline{RUNTIMES_*} options
-\item Unify the CMake code of all the runtimes
-  \begin{itemize}
-  \item Use \textinline{libdublin} as a template?
-  \end{itemize}
-\item Make Less libcxx-centric
-\item Writing runtimes in C++
-\item compiler-rt builtins special handling
-\item GPUs like any other target
-\item Fat libraries
-\item Get rid of \cinline{LLVM_ENABLE_PER_TARGET_RUNTIME_DIR}
-\item QEMU (\textinline{CMAKE_CROSSCOMPILING_EMULATOR})
-\item \dots
+\item<+-> Writing runtimes in C++
+     \itemremark{Option whether to use default stdlib or libc++}
+\item<+-> Get rid of \cinline{LLVM_ENABLE_PER_TARGET_RUNTIME_DIR}
+\item<+-> QEMU (\textinline{CMAKE_CROSSCOMPILING_EMULATOR})
+\item<.-> \dots
 \end{itemize}
 \end{frame}
 
 
 
+
+\begin{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Conclusion}
 
@@ -953,7 +1051,7 @@ object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize
 \item I currently cannot recommend working on improving the system, waste of your time
 \end{itemize}
 \end{frame}
-
+\end{comment}
 
 
 

@@ -3,7 +3,7 @@
    viewBox="0 0 30.022352 24.000252"
    version="1.1"
    id="svg2"
-   sodipodi:docname="directory.svg"
+   sodipodi:docname="dir.svg"
    width="30.022352"
    height="24.000252"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
@@ -23,13 +23,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="60.46875"
-     inkscape:cx="14.999483"
-     inkscape:cy="11.997933"
+     inkscape:zoom="10.689466"
+     inkscape:cx="-19.130984"
+     inkscape:cy="-10.05663"
      inkscape:window-width="2052"
      inkscape:window-height="1211"
-     inkscape:window-x="663"
-     inkscape:window-y="681"
+     inkscape:window-x="1025"
+     inkscape:window-y="558"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
   <defs
@@ -42,7 +42,8 @@
   <g
      data-name="Layer 39"
      id="Layer_39"
-     transform="translate(-1,-3.9999987)">
+     transform="translate(-1,-3.9999987)"
+     style="fill:#ffffff">
     <path
        class="cls-1"
        d="M 4,28 A 3,3 0 0 1 1,25 V 7 A 3,3 0 0 1 4,4 h 7 a 1,1 0 0 1 0.77,0.36 L 14.8,8 H 27 a 1,1 0 0 1 0,2 H 14.33 A 1,1 0 0 1 13.57,9.64 L 10.53,6 H 4 A 1,1 0 0 0 3,7 v 18 a 1,1 0 0 0 1,1 1,1 0 0 1 0,2 z"
