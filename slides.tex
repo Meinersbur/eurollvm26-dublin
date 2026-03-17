@@ -181,17 +181,17 @@ The system we build on
 \item \shinline{llvm-tblgen}, \shinline{mlir-tblgen}, \dots
 \end{itemize}
 \end{block}
-\end{column}
-\begin{column}{0.31\textwidth}
+\end{column}%
+\begin{column}{0.31\textwidth}\anchor[t]{dummy}%
 \begin{block}{Cross-Compile Target}
 Where Clang will run
 \begin{itemize}
 \item \shinline{clang}, \shinline{opt}, \shinline{lld}, \dots
 \item \shinline{LLVMSupport}\{\shinline{.a}/\shinline{.so}\},  \shinline{LLVMPolly.so}, \dots
-\end{itemize}
-\end{block}\anchor[b]{asw}
-\end{column}\anchor[t]{ane}
-\begin{column}{0.31\textwidth}
+\end{itemize}%
+\end{block}\anchor[b]{asw}%
+\end{column}\anchor[t]{ane}%
+\begin{column}{0.31\textwidth}%
 \anchor[t]{bnw}%
 \begin{block}{Compiler Target}
 What Clang will compile for
@@ -211,7 +211,7 @@ What Clang will compile for
 \item Instead of: Build clang \textrightarrow{} build compiler-rt for x86\_64 \textrightarrow{} build compiler-rt for arm64 \textrightarrow{} \dots
 \end{itemize}
 \item Reduce per-runtime boilerplate/differences between build modes
-\item \alt<-1>{Runtimes compiled (Stage 2) using just-built Clang}{\textcolor{red}{Runtimes compiled (Stage 2) using just-built Clang}}
+\item \alert<2->{Runtimes compiled (Stage 2) using just-built Clang}
 \end{itemize}
 
 \begin{tikzpicture}[overlay,remember picture]
@@ -639,6 +639,7 @@ endforeach ()
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
 \begin{frame}[fragile,shrink=5]{Bootstrapping Build Mode}
 
 \begin{block}{\shinline{llvm/runtimes/CMakeLists.txt}}
@@ -668,7 +669,7 @@ endforeach ()
 \end{itemize}
 \end{block}
 \end{frame}
-
+\end{comment}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -676,7 +677,7 @@ endforeach ()
 \begin{frame}[fragile]{CMake Cache Files}
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-5-cachefiles}}
 \begin{itemize}
-\item \shinline{cmake/caches/runtimes-bins.cmake}
+\item[\pgfuseimage{file}] \shinline{cmake/caches/runtimes-bins.cmake}
   \begin{itemize}
   \item Pre-populated CMake parameters as a bootstrapping build would set them
   \end{itemize}
@@ -719,7 +720,7 @@ for tree={dirtree}
     [clang]
   ]
   [lib
-    [<triple>, font=\sffamily
+    [<target triple>, font=\sffamily
       [{*.so, *.a}]
     ]
   ]
@@ -728,7 +729,7 @@ for tree={dirtree}
 \end{tightcenter}
 \end{minipage}
 \begin{itemize}
-\item Accessible to any compiler
+\item Accessible to any compiler when installed (including e.g. gcc)
 \end{itemize}
 \end{block}
 \end{column}
@@ -744,9 +745,9 @@ for tree={dirtree}
   ]
   [lib
     [clang
-      [<version>, font=\sffamily
+      [<llvm version>, font=\sffamily
         [lib
-          [<triple>, font=\sffamily
+          [<target triple>, font=\sffamily
             [{*.a}]
           ]
         ]
@@ -759,7 +760,7 @@ for tree={dirtree}
 %\vspace*{-30mm}
 %\end{minipage}
 \begin{itemize}
-\item Accessible only for this version of Clang (and Flang)
+\item Accessible to only this version of Clang (and Flang)
 \end{itemize}
 \end{block}
 \end{column}
@@ -799,10 +800,13 @@ for tree={dirtree}
 \item[\pgfuseimage{file}] \shinline{cmake/Modules/AddDublin.cmake}
   \begin{itemize}
   \item If building Shared and Static library, use an OBJECT library
+  \item Wrapper around CMake's native \textinline{add_library}
+  \item \shinline{AddLLVM}'s \textinline{llvm_add_library} main service is linking to LLVM libraries.
+    \itemremark{Target triple confusion. Do not use.}
   \end{itemize}
 \item[\pgfuseimage{file}] \shinline{lib/Dublin/CMakeLists.txt}
   \begin{itemize}
-  \item Use \textinline{add_dublin_library} from \shinline{AddDublin.cmake}
+  \item Use \shinline{AddDublin.cmake} instead of \textinline{add_library}
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -877,7 +881,8 @@ object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize
   \begin{itemize}
   \item Testing boilerplate
   \end{itemize}
- \item[\pgfuseimage{file}] \shinline{dublin/test/lit.cfg.py},  \shinline{dublin/test/lit.site.cfg.py.in}, 
+ \item[\pgfuseimage{file}] \shinline{dublin/test/lit.cfg.py}
+ \item[\pgfuseimage{file}] \shinline{dublin/test/lit.site.cfg.py.in}
     \begin{itemize}
     \item \shinline{llvm-lit} configuration
       \begin{itemize}
@@ -900,12 +905,11 @@ object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize
     \begin{itemize}
     \item Google Test-based test code
     \end{itemize}
-\item[\pgfuseimage{file}] \shinline{test/Unit/lit.cfg.py}, \shinline{test/Unit/lit.site.cfg.py.in}
+\item[\pgfuseimage{file}] \shinline{test/Unit/lit.cfg.py}
+\item[\pgfuseimage{file}] \shinline{test/Unit/lit.site.cfg.py.in}
     \begin{itemize}
     \item \shinline{llvm-lit} configuration
-      \begin{itemize}
-      \item How to find unittests (\textinline{lit.formats.GoogleTest})
-      \end{itemize}
+      \itemremark{How to find unittests (\textinline{lit.formats.GoogleTest})}
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -921,7 +925,8 @@ object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize
     \begin{itemize}
     \item The documentation
     \end{itemize}
-\item[\pgfuseimage{file}] \shinline{docs/conf.py}, \shinline{docs/CMakeLists.txt}
+\item[\pgfuseimage{file}] \shinline{docs/conf.py}
+\item[\pgfuseimage{file}] \shinline{docs/CMakeLists.txt}
     \begin{itemize}
     \item Sphinx configuration
     \end{itemize}
@@ -960,10 +965,9 @@ object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize
 \subsection{Step 13: Cross-Compilation}
 \begin{frame}[fragile]{Cross-Compilation}
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-13-cross}}
-%\begin{itemize}
-%\item
+
 No modifications necessary !
-%\end{itemize}
+
 \end{frame}
 
 
@@ -1031,11 +1035,14 @@ for tree={dirtree}
 \begin{frame}[fragile]{Accelerator Offloading}
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-14-offload}}
 \begin{itemize}
-\item[\pgfuseimage{file}] \shinline{CMakeLists.txt}, \shinline{cmake/Modules/AddDublin.cmake}
+\item[\pgfuseimage{file}] \shinline{CMakeLists.txt}
+\item[\pgfuseimage{file}] \shinline{cmake/Modules/AddDublin.cmake}
   \begin{itemize}
-  \item Accommodate imitations of GPGPU targets
+  \item Accommodate limitations of GPGPU targets
   \end{itemize}
-\item[\pgfuseimage{dir}] \shinline{examples/dublin-openmp}, \shinline{examples/dublin-hip}, \shinline{examples/dublin-cuda}
+\item[\pgfuseimage{dir}] \shinline{examples/dublin-openmp}
+\item[\pgfuseimage{dir}] \shinline{examples/dublin-hip}
+\item[\pgfuseimage{dir}] \shinline{examples/dublin-cuda}
   \begin{itemize}
   \item Use of GPGPU-side \shinline{libdublin.a} from various offload languages
   \end{itemize}
@@ -1052,11 +1059,14 @@ for tree={dirtree}
 \vspace*{12ex}
 
 \begin{itemize}
-\item[\pgfuseimage{file}] \shinline{lib/Dublin/dublin.cpp}, \shinline{include/dublin/Dublin/dublin.h}, \shinline{examples/dublin-hello/dublin-hello.cpp}
+\item[\pgfuseimage{file}] \shinline{lib/Dublin/dublin.cpp}
+\item[\pgfuseimage{file}] \shinline{include/dublin/Dublin/dublin.h}
+\item[\pgfuseimage{file}] \shinline{examples/dublin-hello/dublin-hello.cpp}
   \begin{itemize}
   \item Convert to C++
   \end{itemize}
-\item[\pgfuseimage{file}] \shinline{cmake/Modules/AddDublin.cmake}, \shinline{third-party/unittest/CMakeLists.txt}
+\item[\pgfuseimage{file}] \shinline{cmake/Modules/AddDublin.cmake}
+\item[\pgfuseimage{file}] \shinline{../third-party/unittest/CMakeLists.txt}
   \begin{itemize}
   \item Link to libc++, regardless of compiler default
   \end{itemize}
@@ -1125,7 +1135,7 @@ for tree={dirtree}
      \itemremark{Boilerplate diverged significantly since the SVN days}
 \item<+-> Fat libraries support
   \itemremark{MacOS Universal Binaries, \textinline{arm64ec}, Offload, \dots}
-\item<+-> Reduce special cases
+\item<+-> Avoid special cases
      \begin{itemize}
      \item GPGPU targets
      \item \textinline{LLVM_RUNTIME_TARGETS=default}

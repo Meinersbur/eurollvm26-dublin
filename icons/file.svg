@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   viewBox="0 0 24.000017 30.000017"
+   viewBox="0 0 30 30.000017"
    version="1.1"
    id="svg2"
    sodipodi:docname="file.svg"
-   width="24.000017"
+   width="30"
    height="30.000017"
    inkscape:export-filename="file.pdf"
    inkscape:export-xdpi="96"
@@ -24,13 +24,13 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="60.46875"
-     inkscape:cx="9.9968992"
+     inkscape:cx="15.371576"
      inkscape:cy="15.007752"
-     inkscape:window-width="3721"
-     inkscape:window-height="2137"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
+     inkscape:window-width="2467"
+     inkscape:window-height="1557"
+     inkscape:window-x="812"
+     inkscape:window-y="215"
+     inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
   <defs
      id="defs1">
@@ -41,13 +41,13 @@
      id="title1" />
   <path
      class="cls-1"
-     d="M 23,30.000017 H 1 c -0.5522847,0 -1,-0.447715 -1,-1 V 1.0000167 C 0,0.44773198 0.4477153,1.6736305e-5 1,1.6736305e-5 H 15 C 15.265803,-0.00152002 15.521281,0.10283023 15.71,0.29001674 l 8,7.99999996 c 0.187187,0.1887188 0.291537,0.444197 0.29,0.71 V 29.000017 c 0,0.552285 -0.447715,1 -1,1 z m -21,-2 H 22 V 9.4100167 l -7.41,-7.41 H 2 Z"
+     d="M 26,30.000017 H 4 c -0.5522847,0 -1,-0.447715 -1,-1 V 1.0000167 C 3,0.44773198 3.4477153,1.6736305e-5 4,1.6736305e-5 H 18 C 18.265803,-0.00152002 18.521281,0.10283023 18.71,0.29001674 l 8,7.99999996 c 0.187187,0.1887188 0.291537,0.444197 0.29,0.71 V 29.000017 c 0,0.552285 -0.447715,1 -1,1 z m -21,-2 H 25 V 9.4100167 l -7.41,-7.41 H 5 Z"
      id="path1"
      style="fill:#ffffff;fill-opacity:1"
      sodipodi:nodetypes="sssssccccsscccccc" />
   <path
      class="cls-1"
-     d="M 23,10.000017 H 15 A 1,1 0 0 1 14,9.0000167 v -8 a 1,1 0 0 1 0.62,-0.91999996 1,1 0 0 1 1.09,0.21 l 8,7.99999996 a 1,1 0 0 1 0.21,1.09 A 1,1 0 0 1 23,10.000017 Z M 16,8.0000167 h 4.59 l -4.59,-4.59 z"
+     d="M 26,10.000017 H 18 A 1,1 0 0 1 17,9.0000167 v -8 a 1,1 0 0 1 0.62,-0.91999996 1,1 0 0 1 1.09,0.21 l 8,7.99999996 a 1,1 0 0 1 0.21,1.09 A 1,1 0 0 1 26,10.000017 Z M 19,8.0000167 h 4.59 l -4.59,-4.59 z"
      id="path2"
      style="fill:#ffffff;fill-opacity:1" />
 </svg>
