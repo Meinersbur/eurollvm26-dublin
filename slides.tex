@@ -50,6 +50,40 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
+\begin{frame}[fragile]{About Me}
+
+\begin{columns}
+\begin{column}[c]{0.38\textwidth}
+\includegraphics[width=\linewidth]{figs/portrait}
+\end{column}
+\begin{column}[c]{0.58\textwidth}
+\begin{itemize}
+\item At AMD since 2024
+\item Working on 
+  \begin{itemize}
+  \item Fortran
+  \item OpenMP
+  \item GPGPU Offloading
+  \item Loops
+  \end{itemize}
+ \item Converted Flang's runtime to use the \shinline{LLVM_ENABLE_RUNTIMES} system\itemremark{
+    \begin{minipage}{\linewidth}
+    \begin{tightcenter}
+    \includegraphics[width=0.7\linewidth]{figs/eurollvm2025talk}\\
+    \url{https://youtu.be/AGrInJLxJ0Q}
+    \end{tightcenter}
+    \end{minipage}
+ }
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Why This Tutorial?}
 
 \begin{frame}[fragile]{Why This Tutorial}
@@ -213,11 +247,11 @@ void _dublin_hello_world() {
 %  \begin{itemize}
 %  \item No Windows/MacOS/AIX/\dots
 %  \end{itemize}
-\item Prioritize conciseness over
+\item Prioritize conciseness and principles over
 \begin{itemize}
 \item \dots{} features
 \item \dots{} comments
-\item \dots{} boilerplate not topic in this tutorial
+\item \dots{} unrelated boilerplate
 \end{itemize}
 \item Point out shortcomings of the current system
 \end{itemize}
@@ -265,16 +299,17 @@ void _dublin_hello_world() {
 \begin{frame}[fragile]{Register with the LLVM Build System}
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-1-basic}}
 \begin{itemize}
-\item Allow \shinline{LLVM_ENABLE_RUNTIME=dublin}
+  \item[\pgfuseimage{file}] \shinline{llvm/CMakeLists.txt}
+  \item[\pgfuseimage{file}] \shinline{runtimes/CMakeLists.txt}
   \begin{itemize}
-  \item \shinline{llvm/CMakeLists.txt}
-  \item \shinline{runtimes/CMakeLists.txt}
+      \item Allow \shinline{LLVM_ENABLE_RUNTIME=dublin}
   \end{itemize}
-\item Subproject boilerplate
+
+  \item[\pgfuseimage{file}] \shinline{dublin/CMakeLists.txt}
+  \item[\pgfuseimage{file}] \shinline{dublin/CODE_OWNERS.TXT}
+  \item[\pgfuseimage{file}] \shinline{dublin/LICENSE.TXT}
   \begin{itemize}
-  \item \shinline{dublin/CMakeLists.txt}
-  \item \shinline{dublin/CODE_OWNERS.TXT}
-  \item \shinline{dublin/LICENSE.TXT}
+    \item Subproject boilerplate
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -285,20 +320,22 @@ void _dublin_hello_world() {
 \subsection{Step 2: Build a Library Artifact}
 \begin{frame}[fragile]{Step 2: Build a Library Artifact}
 \begin{itemize}
-\item Library source files
+\item[\pgfuseimage{file}] \shinline{lib/Dublin/dublin.c}
+\item[\pgfuseimage{file}] \shinline{include/dublin/Dublin/dublin.h}
   \begin{itemize}
-  \item \shinline{lib/Dublin/dublin.c}
-  \item \shinline{include/dublin/Dublin/dublin.h}
+    \item Library sources
   \end{itemize}
-\item Build \shinline{libdublin.a}
+
+\item[\pgfuseimage{file}] \shinline{lib/Dublin/CMakeLists.txt}
   \begin{itemize}
-  \item \textinline{add_executable(dublin dublin.c)}
+    \item Build instructions for \shinline{libdublin.a}
   \end{itemize}
 \end{itemize}
 \end{frame}
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \forestset{dirtree/.style={s sep=1mm,font=\footnotesize,
     font=\ttfamily,
     grow'=0,
@@ -319,7 +356,7 @@ void _dublin_hello_world() {
     before computing xy={l=15pt},
     }}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}[fragile]{Standard Subproject Layout}
 \begin{scaleenv}{0.6}
 \begin{columns}[t]
@@ -408,13 +445,34 @@ for tree={dirtree}
 \begin{frame}[fragile]{An Example that uses the Library}
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-3-example}}
 \begin{itemize}
-\item Example source
+\item[\pgfuseimage{file}] \shinline{examples/dublin-hello/dublin-hello.c}
   \begin{itemize}
-  \item \shinline{examples/dublin-hello/dublin-hello.c}
+  \item Example source
   \end{itemize}
-\item Build instructions
+\item[\pgfuseimage{file}] \shinline{examples/dublin-hello/CMakeLists.txt}
   \begin{itemize}
-  \item \shinline{examples/dublin-hello/CMakeLists.txt}
+  \item Example build instructions
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Common What To Build Options}
+\begin{itemize}
+\item \textinline{DUBLIN_INCLUDE_<component>}
+  \begin{itemize}
+  \item Executes \textinline{add_subdirectory(<component>)}
+  \item \textinline{ninja <component>} can be used
+  \item Default to \textinline{LLVM_INCLUDE_<component>}
+  \end{itemize}
+\item[]
+\item \textinline{DUBLIN_BUILD_<component>}
+  \begin{itemize}
+  \item \textinline{ninja all} also builds \textinline{<component>} 
+  \item Generally steers which target use \textinline{ALL}/\textinline{EXCLUDE_FROM_ALL}
+  \item Default to \textinline{LLVM_BUILD_<component>}
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -426,9 +484,9 @@ for tree={dirtree}
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-4-modes}}
 \begin{frame}[fragile]{Build Modes}
 \begin{itemize}
-\item Detecting Legacy Build Modes
+  \item[\pgfuseimage{file}] \shinline{CMakeLists.txt}
   \begin{itemize}
-  \item \shinline{CMakeLists.txt}
+     \item Detect unsupported legacy build modes
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -448,7 +506,7 @@ for tree={dirtree}
 %\end{columns}
 
 
-\vspace*{6ex}
+\vspace*{3ex}
 
 \begin{block}{Legacy Build Modes}
 %\begin{itemize}
@@ -463,6 +521,8 @@ for tree={dirtree}
 \begin{itemize}
 \item Intended to be superseded by runtimes build modes\footnote{\url{https://lists.llvm.org/pipermail/llvm-dev/2020-October/145997.html}}
 \item If your build infrastructure still uses this, please consider updating
+\item Even \dquote{standalone} mode needs files from sibling directories
+  \itemremark{A consequence of the monorepository}
 \end{itemize}
 \end{block}
 
@@ -478,7 +538,7 @@ for tree={dirtree}
 \end{tabular}
 \medskip
 \begin{itemize}
-\item Shared+common boilerplate code in \shinline{<llvm-project>/runtimes/CMakeLists.txt}
+\item Shared boilerplate code in \shinline{<llvm-project>/runtimes/CMakeLists.txt}
 \end{itemize}
 \end{block}
 
@@ -649,7 +709,7 @@ endforeach ()
 \vspace*{-\baselineskip}
 \begin{columns}[t]
 \begin{column}[t]{0.48\textwidth}
-\begin{block}{Prefix Dir}
+\begin{block}{Installation Prefix Dir}
 \begin{minipage}[t][48mm][t]{\textwidth}
 \begin{tightcenter}
 \begin{forest}
@@ -902,9 +962,10 @@ object ->["\textinline{$<TARGET_OBJECTS:obj.dublin>}" {sloped,font=\footnotesize
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-13-cross}}
 %\begin{itemize}
 %\item
-No modifications necessary
+No modifications necessary !
 %\end{itemize}
 \end{frame}
+
 
 
 
@@ -918,10 +979,50 @@ No modifications necessary
   \itemremark{Compile runtimes also for arm64}
 \item \shinline{-D RUNTIMES_CMAKE_ARGS=-DLLVM_USE_LINKER=lld}
   \itemremark{Ubuntu's default \shinline{ld.bfd} does not support arm64}
-\item \shinline{-D RUNTIMES_aarch64-linux-gnu_ZLIB_LIBRARY=/usr/lib/aarch64-linux-gnu/libz.a}
-  \itemremark{CMake \textinline{find_package(ZLIB)} may not find multilib libraries}
+%\item \shinline{-D RUNTIMES_aarch64-linux-gnu_ZLIB_LIBRARY=/usr/lib/aarch64-linux-gnu/libz.a}
+%  \itemremark{CMake \textinline{find_package(ZLIB)} may not find multilib libraries}
 \end{itemize}
 \end{frame}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Cross-Compilation}
+
+\begin{forest}
+for tree={dirtree}
+[{\$builddir/}
+  [runtimes/
+    [runtimes-bins/
+      [CMakeCache.txt]
+    ]
+    [runtimes-aarch64-linux-gnu-bins/
+      [CMakeCache.txt]
+    ]
+  ]
+]
+\end{forest}
+
+\bigskip
+
+\begin{itemize}
+\item \textinline{LLVM_RUNTIME_TARGETS=default}
+  \begin{itemize}
+%     \item[\pgfuseimage{dir}] \cinline{runtimes/runtimes-bins}
+  \item  $\approx$ \textinline{x86_64-unknown-linux-gnu}
+  \item Executable on host
+  \item NOT necessarily same ABI as LLVM (e.g. incompatible \shinline{LLVMSupport.a})
+  \end{itemize}
+\item \textinline{LLVM_RUNTIME_TARGETS=aarch64-linux-gnu} 
+  \begin{itemize}
+%     \item[\pgfuseimage{dir}] \cinline{runtimes/runtimes-bins}
+  \item Cross-compilation target
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
 
 
 
@@ -934,9 +1035,9 @@ No modifications necessary
   \begin{itemize}
   \item Accommodate imitations of GPGPU targets
   \end{itemize}
-\item[\pgfuseimage{dir}] \shinline{examples/dublin-offload}
+\item[\pgfuseimage{dir}] \shinline{examples/dublin-openmp}, \shinline{examples/dublin-hip}, \shinline{examples/dublin-cuda}
   \begin{itemize}
-  \item Demonstrate OpenMP offloading
+  \item Use of GPGPU-side \shinline{libdublin.a} from various offload languages
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -1000,6 +1101,8 @@ No modifications necessary
     \itemremark{Windows/MacOS/AIX/Fuchsia/\dots}
 \item Multilib 
     \itemremark{ \shinline{lib32}/\shinline{lib64}}
+\item Versioning
+  \itemremark{\textinline{libdublin.a.1.1}}
 \item Export libraries 
     \itemremark{\textinline{find_package(Dublin)}}
 \item Continuous Integration

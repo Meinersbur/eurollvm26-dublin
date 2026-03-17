@@ -218,8 +218,8 @@
 
 
 \usepackage{minted}
-\usemintedstyle{borland}
 \ifelaboration{
+\usemintedstyle{borland}
 \newminted{c}{}
 \newminted{cpp}{}
 \newminted{sh}{}
@@ -230,6 +230,7 @@
 \newmintinline{text}{style=bw}
 }
 \ifpresentation{
+\usemintedstyle{native}
 \newminted{c}{style=bw}
 \newminted{cpp}{style=bw}
 \newminted{sh}{style=bw}

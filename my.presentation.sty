@@ -524,28 +524,19 @@
 
 
 
+\usepackage{regexpatch}
 
+\xpatchcmd{\itemize}
+  {\def\makelabel}
+  {\setlength{\itemsep}{0.6ex}\def\makelabel}
+  {}
+  {}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\xpatchcmd{\enumerate}
+  {\def\makelabel}
+  {\setlength{\itemsep}{0.6ex}\def\makelabel}
+  {}
+  {}
 
 
 
