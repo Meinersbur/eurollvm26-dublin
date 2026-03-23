@@ -130,7 +130,7 @@
 \begin{enumerate}
 \item<1-> Initially, each subproject had its own SVN repository
   \begin{itemize}
-  \item Subprojects categorized as \dquote{tools} (clang: 2009), \dquote{runtime} (libprofile), and \dquote{projects} (e.g. llvm-gcc)
+  \item Subprojects categorized as \dquote{tools} (clang: 2009), \dquote{runtime} (libprofile), and \dquote{projects} (e.g., llvm-gcc)
   \item An example project boilerplate existed
    %\footnote{\url{https://github.com/llvm/llvm-project/tree/afbe97542f6fbf2b0dac0ede5e8a38ff0b9f24c7/llvm/projects/sample}}
   \end{itemize}
@@ -651,9 +651,9 @@ endforeach ()
   \end{itemize}
 \item Forward configuration parameters
   \begin{itemize}
-  \item Selected configuration options (e.g. \shinline{LLVM_INCLUDE_TESTS})
-  \item Any option that starts with the capitalized runtime name (i.e. \textinline{DUBLIN_*})
-  \item The content of \textinline{RUNTIMES_CMAKE_ARGS}\itemremark{e.g. \shinline{-DRUNTIMES_CMAKE_ARGS="-DCMAKE_CXX_FLAGS=-ferror-limit=1"}}
+  \item Selected configuration options (e.g., \shinline{LLVM_INCLUDE_TESTS})
+  \item Any option that starts with the capitalized runtime name (i.e., \textinline{DUBLIN_*})
+  \item The content of \textinline{RUNTIMES_CMAKE_ARGS}\itemremark{e.g., \shinline{-DRUNTIMES_CMAKE_ARGS="-DCMAKE_CXX_FLAGS=-ferror-limit=1"}}
   \end{itemize}
 \item Build prerequisites
   \begin{itemize}
@@ -729,7 +729,7 @@ for tree={dirtree}
 \end{tightcenter}
 \end{minipage}
 \begin{itemize}
-\item Accessible to any compiler when installed (including e.g. gcc)
+\item Accessible to any compiler when installed (including e.g., gcc)
 \end{itemize}
 \end{block}
 \end{column}
@@ -1016,7 +1016,7 @@ for tree={dirtree}
 %     \item[\pgfuseimage{dir}] \cinline{runtimes/runtimes-bins}
   \item  $\approx$ \textinline{x86_64-unknown-linux-gnu}
   \item Executable on host
-  \item NOT necessarily same ABI as LLVM (e.g. incompatible \shinline{LLVMSupport.a})
+  \item NOT necessarily same ABI as LLVM (e.g., incompatible \shinline{LLVMSupport.a})
   \end{itemize}
 \item \textinline{LLVM_RUNTIME_TARGETS=aarch64-linux-gnu} 
   \begin{itemize}
@@ -1197,7 +1197,7 @@ cmake ../llvm -GNinja                                      \
 \begin{column}{0.48\textwidth}
 \begin{block}{LLVM\_ENABLE\_PROJECTS}
 \begin{itemize}
-\item Compiled using host compiler (e.g. GCC)
+\item Compiled using host compiler (e.g., gcc)
 \item Same CMake build-dir as LLVM itself
 \item Intended to run on the host architecture
 %\item Typical usage: \textinline{"-DLLVM_ENABLE_PROJECTS=clang;lld;polly"}
@@ -1286,7 +1286,7 @@ cmake -GNinja                                          \
 \begin{block}{LLVM\_ENABLE\_PROJECTS: \textinline{ninja <project>}}
 \begin{enumerate}
   \item CMake ensured all necessary dependencies
-%  \item Targets can depend on \textinline{runtimes} (e.g. \textinline{check-openmp})
+%  \item Targets can depend on \textinline{runtimes} (e.g., \textinline{check-openmp})
 \end{enumerate}
 \end{block}
 \end{column}
@@ -1363,7 +1363,7 @@ cmake -GNinja llvm-srcdir/runtimes     \
 \end{minted}
 \begin{itemize}
 \item Projects (LLVM, Clang, \dots) compiled separately
-\item Uses default C/C++ compiler (e.g. gcc)
+\item Uses default C/C++ compiler (e.g., gcc)
 \end{itemize}
 \end{block}
 
@@ -1748,7 +1748,7 @@ cmake -GNinja llvm-srcdir/runtimes                 \
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]{To Do Items}
 \begin{itemize}
-\item Flang is not (yet) a cross-compiler\itemremark{Sometimes assumes ABI of host platform, e.g. \cinline{sizeof(long)}}
+\item Flang is not (yet) a cross-compiler\itemremark{Sometimes assumes ABI of host platform, e.g., \cinline{sizeof(long)}}
 \item Compile builtin modules in the runtimes build using CMake
     \begin{itemize}
     \item OpenMP's modules as well
