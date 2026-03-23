@@ -391,16 +391,16 @@
 %\usebackgroundtemplate{\includegraphics[width=\paperwidth,height=\paperheight]{logos/amd-title}}
 %\includegraphics[width=\pagewidth,height=\pageheight]{logos/amd-title}
   \leavevmode%
-  \hbox{%
-      \hspace*{\beamer@leftmargin}\begin{beamercolorbox}[wd=\textwidth,ht=2.5ex,left]{section in head/foot}%
-        {\usebeamerfont{section in head/foot}\insertsectionhead}%
-        \ifx\insertsubsectionhead\@empty%
-        \else%
-          {\usebeamerfont{subsection in head/foot}\usebeamercolor[fg]{subsection in head/foot}\hspace{0.5em}$\rightarrow$\hspace{0.5em}\insertsubsectionhead\strut\par}%
-        \fi%
-      \end{beamercolorbox}%
-  }%
-%  \vskip0pt%
+%  \hbox{%
+%      \hspace*{\beamer@leftmargin}\begin{beamercolorbox}[wd=\textwidth,ht=2.5ex,left]{section in head/foot}%
+%        {\usebeamerfont{section in head/foot}\insertsectionhead}%
+%        \ifx\insertsubsectionhead\@empty%
+%        \else%
+%          {\usebeamerfont{subsection in head/foot}\usebeamercolor[fg]{subsection in head/foot}\hspace{0.5em}$\rightarrow$\hspace{0.5em}\insertsubsectionhead\strut\par}%
+%        \fi%
+%      \end{beamercolorbox}%
+%  }%
+  \vskip4mm%
 }
 %\end{comment}
 
@@ -444,9 +444,10 @@
       \fi%
     }%
   \end{beamercolorbox}%
-%\vskip-1ex%
+\vskip3mm%
 %\rule{\textwidth}{0.1pt}%
 }
+
 
 
 \def\insertpresentationendframe{\inserttotalframenumber}
