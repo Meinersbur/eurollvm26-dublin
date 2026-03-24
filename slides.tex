@@ -441,8 +441,8 @@ for tree={dirtree}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 3: An Example that uses the Library}
-\begin{frame}[fragile]{An Example that uses the Library}
+\subsection{Step 3: An Example That Uses the Library}
+\begin{frame}[fragile]{An Example That Uses the Library}
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-3-example}}
 \begin{itemize}
 \item[\pgfuseimage{file}] \shinline{examples/dublin-hello/dublin-hello.c}
@@ -465,14 +465,14 @@ for tree={dirtree}
   \begin{itemize}
   \item Executes \textinline{add_subdirectory(<component>)}
   \item \textinline{ninja <component>} can be used
-  \item Default to \textinline{LLVM_INCLUDE_<component>}
+  \item Defaults to \textinline{LLVM_INCLUDE_<component>}
   \end{itemize}
 \item[]
 \item \textinline{DUBLIN_BUILD_<component>}
   \begin{itemize}
   \item \textinline{ninja all} also builds \textinline{<component>} 
-  \item Generally steers which target use \textinline{ALL}/\textinline{EXCLUDE_FROM_ALL}
-  \item Default to \textinline{LLVM_BUILD_<component>}
+  \item Generally, steers which target use \textinline{ALL}/\textinline{EXCLUDE_FROM_ALL}
+  \item Defaults to \textinline{LLVM_BUILD_<component>}
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -646,7 +646,7 @@ endforeach ()
 \begin{itemize}
 \item Configure nested builddirs
   \begin{itemize}
-  \item \shinline{runtimes/buitins-bins} for Compiler-RT
+  \item \shinline{runtimes/builtins-bins} for Compiler-RT
   \item \shinline{runtimes/runtimes-bins}
   \end{itemize}
 \item Forward configuration parameters
@@ -1162,7 +1162,7 @@ for tree={dirtree}
 \begin{itemize}
 \item Now you know how \cinline{LLVM_ENABLE_RUNTIMES} works
 \item Use the Knowledge Wisely
-\item I currently cannot recommend working on improving the system, waste of your time
+\item I currently cannot recommend working on improving the system. It is a waste of your time
 \end{itemize}
 \end{frame}
 \end{comment}
@@ -1788,7 +1788,7 @@ the content hereof without obligation of AMD to notify any person of such revisi
 
 \medskip
 
-THIS INFORMATION IS PROVIDED ‘AS IS.” AMD MAKES NO REPRESENTATIONS OR WARRANTIES WITH 
+THIS INFORMATION IS PROVIDED \dquote{AS IS.} AMD MAKES NO REPRESENTATIONS OR WARRANTIES WITH 
 RESPECT TO THE CONTENTS HEREOF AND ASSUMES NO RESPONSIBILITY FOR ANY INACCURACIES, 
 ERRORS, OR OMISSIONS THAT MAY APPEAR IN THIS INFORMATION. AMD SPECIFICALLY DISCLAIMS ANY 
 IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR ANY PARTICULAR 
