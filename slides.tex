@@ -136,7 +136,7 @@
   \end{itemize}
 \item<2-> \dquote{runtime} subdirectory disappears with dysfunct PGO removal (2013)
  
-\item<3-> Desire to separate runtimes\footnote{\url{https://reviews.llvm.org/D20992}}\footnote{%Original proposal:
+\item<3-> Desire to separate runtimes\footnote{\url{https://reviews.llvm.org/D20992}}$^\text{,}$\footnote{%Original proposal:
  \url{https://lists.llvm.org/pipermail/llvm-dev/2020-October/145997.html}} (2016--2020)
   \begin{itemize}
   \item Somewhat different from compile-time utils/tools/compilers
@@ -706,7 +706,8 @@ endforeach ()
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]{Library Locations}
 \framesubtitle{\shinline{LLVM_ENABLE_PER_TARGET_RUNTIME_DIR=ON}}
-%\begin{scaleenv}{0.6}
+\vspace*{-\baselineskip}
+\begin{scaleenv}{0.95}
 \vspace*{-\baselineskip}
 \begin{columns}[t]
 \begin{column}[t]{0.48\textwidth}
@@ -765,7 +766,7 @@ for tree={dirtree}
 \end{block}
 \end{column}
 \end{columns}
-%\end{scaleenv}
+\end{scaleenv}
 \end{frame}
 
 

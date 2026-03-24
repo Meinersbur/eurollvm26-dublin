@@ -107,8 +107,8 @@
 \xdefinecolor{lblue}{rgb}{0.07 0.55 0.67}
 \xdefinecolor{item_color}{rgb}{0.07 0.55 0.67}
 \xdefinecolor{illustrationcolor}{RGB}{3 64 76}
-
-
+\xdefinecolor{darkgray1}{RGB}{38 38 38}
+\xdefinecolor{mediumgray}{RGB}{89 89 89}
 
 \xdefinecolor{textcolor}{RGB}{200 200 200}
 %\xdefinecolor{textcolor}{named}{white}
@@ -229,10 +229,10 @@
 \setbeamercolor{navigation symbols dimmed}{use=structure,fg=structure.fg!20!bg}
 \setbeamercolor{mini frame}{parent=section in head/foot}
 
-\setbeamercolor{block body}{bg=papercolor!90!white}
+\setbeamercolor{block body}{bg=darkgray1}
 \setbeamercolor{block body alerted}{}
 \setbeamercolor{block body example}{}
-\setbeamercolor{block title}{parent=structure,bg=papercolor!80!white}
+\setbeamercolor{block title}{parent=structure,bg=mediumgray}
 \setbeamercolor{block title alerted}{parent=alerted text}
 \setbeamercolor{block title example}{parent=example text}
 
@@ -457,7 +457,7 @@
 \g@addto@macro{\appendix}{\immediate\write\@auxout{\string\@writefile{nav}{\noexpand\headcommand{\noexpand\def\noexpand\myinsertpresentationendpage{\the\c@page}}}}}
 
 
-\pgfdeclareimage[height=0.4cm]{amd-logo}{logos/amd-logo-black}
+\pgfdeclareimage[height=6mm]{amd-logo}{logos/amd-logo-black}
 \logo{\pgfuseimage{amd-logo}}
 %\logo{\includegraphics[height=0.4cm]{logos/amd-logo-black}}
 
@@ -477,10 +477,10 @@
 \defbeamertemplate*{footline}{mytheme}
 {%
 % The lug that moves as the presentation progresses
-\begin{tikzpicture}[overlay,remember picture]%
-\pgfmathparse{min(1.1,(\insertpagenumber-\insertpresentationstartpage)/(\myinsertpresentationendpage-1))}%
-\path[draw=gray] (page cs:x={\pgfmathresult},y=1) -- +(0,1mm);%
-\end{tikzpicture}%
+%\begin{tikzpicture}[overlay,remember picture]%
+%\pgfmathparse{min(1.1,(\insertpagenumber-\insertpresentationstartpage)/(\myinsertpresentationendpage-1))}%
+%\path[draw=gray] (page cs:x={\pgfmathresult},y=1) -- +(0,1mm);%
+%\end{tikzpicture}%
 %
 %
 % 'nextsub' is the index of the subsection we are LOOKING FOR
@@ -506,7 +506,11 @@
       \hspace*{3mm}%
       \usebeamerfont{date in head/foot}
         \ifnum\thepage=\numexpr\nextsubpage-1\relax% If last slide in the subsection
-              \begin{minipage}{0pt}{\hspace*{-1.5em}\textcolor{gray}{\textbullet}}\end{minipage}\insertframenumber{}% / \insertpresentationendframe{}
+               \insertframenumber{}% 
+%
+% The marker that this is the last overlay of frame  
+%              \begin{minipage}{0pt}{\hspace*{-1.5em}\textcolor{gray}{\textbullet}}\end{minipage}\insertframenumber{}
+%
         \else%
               \insertframenumber{}% / \insertpresentationendframe{}
         \fi%
@@ -514,10 +518,10 @@
   \end{beamercolorbox}%
   \begin{beamercolorbox}[wd=0.5\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
     \usebeamerfont{date in head/foot}\insertlogo%
-    \hspace*{2mm}%
+    \hspace*{1mm}%
   \end{beamercolorbox}%
   }%
-  \vskip0pt%
+%  \vskip0.5mm%
 }%
 %\end{comment}
 
@@ -525,23 +529,19 @@
 
 
 
-\usepackage{regexpatch}
-
-\xpatchcmd{\itemize}
-  {\def\makelabel}
-  {\setlength{\itemsep}{0.6ex}\def\makelabel}
-  {}
-  {}
-
-\xpatchcmd{\enumerate}
-  {\def\makelabel}
-  {\setlength{\itemsep}{0.6ex}\def\makelabel}
-  {}
-  {}
-
-
-
-
+%\usepackage{regexpatch}
+%
+%\xpatchcmd{\itemize}
+%  {\def\makelabel}
+%  {\setlength{\itemsep}{0.6ex}\def\makelabel}
+%  {}
+%  {}
+%
+%\xpatchcmd{\enumerate}
+%  {\def\makelabel}
+%  {\setlength{\itemsep}{0.6ex}\def\makelabel}
+%  {}
+%  {}
 
 
 
@@ -869,5 +869,5 @@
 
 
 
-\newcommand*\itemremark[1]{\\{\footnotesize{}#1}}
+\newcommand*\itemremark[1]{\\{\footnotesize{}#1}\\[1ex]}
 
