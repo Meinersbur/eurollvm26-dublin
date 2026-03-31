@@ -50,6 +50,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
+\newcommand{\OpenMP}{OpenMP\textsuperscript{\tiny{\textregistered}}\xspace}
+\newcommand{\LLVM}{LLVM\textsuperscript{\tiny{\texttrademark}}\xspace}
+
 \begin{frame}[fragile]{About Me}
 
 \begin{columns}
@@ -62,7 +65,7 @@
 \item Working on 
   \begin{itemize}
   \item Fortran
-  \item OpenMP
+  \item \OpenMP
   \item GPGPU Offloading
   \item Loops
   \end{itemize}
@@ -242,7 +245,7 @@ void _dublin_hello_world() {
 \bigskip
 
 \begin{itemize}
-\item Use LLVM best-practices
+\item Use \LLVM best-practices
 \item Linux only
 %  \begin{itemize}
 %  \item No Windows/MacOS/AIX/\dots
@@ -295,8 +298,8 @@ void _dublin_hello_world() {
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 1: Register with the LLVM Build System}
-\begin{frame}[fragile]{Register with the LLVM Build System}
+\subsection{Step 1: Register with the \LLVM Build System}
+\begin{frame}[fragile]{Register with the \LLVM Build System}
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-1-basic}}
 \begin{itemize}
   \item[\pgfuseimage{file}] \shinline{llvm/CMakeLists.txt}
@@ -802,7 +805,7 @@ for tree={dirtree}
   \begin{itemize}
   \item If building Shared and Static library, use an OBJECT library
   \item Wrapper around CMake's native \textinline{add_library}
-  \item \shinline{AddLLVM}'s \textinline{llvm_add_library} main service is linking to LLVM libraries
+  \item \shinline{AddLLVM}'s \textinline{llvm_add_library} main service is linking to \LLVM libraries
     \itemremark{Target triple confusion. Do not use.}
   \end{itemize}
 \item[\pgfuseimage{file}] \shinline{lib/Dublin/CMakeLists.txt}
@@ -1017,7 +1020,7 @@ for tree={dirtree}
 %     \item[\pgfuseimage{dir}] \cinline{runtimes/runtimes-bins}
   \item  $\approx$ \textinline{x86_64-unknown-linux-gnu}
   \item Executable on host
-  \item NOT necessarily same ABI as LLVM (e.g., incompatible \shinline{LLVMSupport.a})
+  \item NOT necessarily same ABI as \LLVM (e.g., incompatible \shinline{LLVMSupport.a})
   \end{itemize}
 \item \textinline{LLVM_RUNTIME_TARGETS=aarch64-linux-gnu} 
   \begin{itemize}
@@ -1053,8 +1056,8 @@ for tree={dirtree}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Step 15: Depending on Other LLVM Libraries / C++}
-\begin{frame}[fragile]{Depending on Other LLVM Libraries / C++} 
+\subsection{Step 15: Depending on Other \LLVM Libraries / C++}
+\begin{frame}[fragile]{Depending on Other \LLVM Libraries / C++} 
 \framesubtitle{\url{https://github.com/Meinersbur/llvm-dublin/tree/dublin-15-deps}}
 
 \vspace*{12ex}
@@ -1128,7 +1131,7 @@ for tree={dirtree}
 \subsection{Build System Improvements}
 \begin{frame}[fragile,shrink]{Potential Runtimes Build Improvements}
 \begin{itemize}
-\item<+-> Inform LLVM developers and OS distributions
+\item<+-> Inform \LLVM developers and OS distributions
     \itemremark{(Build modes) developer documentation missing, runtime template}
 \item<+-> Make \textinline{RUNTIMES_*} options discoverable
     \itemremark{\textinline{set(RUNTIMES_CMAKE_ARGS "" CACHE STRING "Help")}}
@@ -1170,601 +1173,6 @@ for tree={dirtree}
 
 
 
-\begin{comment}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Old Slides}
-{\Huge Old Slides}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Usage}
-
-\begin{frame}[fragile,shrink=20]{LLVM\_ENABLE\_RUNTIMES?}
-\framesubtitle{Bootstrapping-Runtimes build}
-
-\begin{minted}{sh}
-cmake ../llvm -GNinja                                      \
-  "-DLLVM_ENABLE_PROJECTS=clang;lld;polly"                 \
-  "-DLLVM_ENABLE_RUNTIMES=compiler-rt;libc;libcxx;openmp"
-\end{minted}
-
-\noindent\begin{columns}[t]
-\begin{column}{0.48\textwidth}
-\begin{block}{LLVM\_ENABLE\_PROJECTS}
-\begin{itemize}
-\item Compiled using host compiler (e.g., gcc)
-\item Same CMake build-dir as LLVM itself
-\item Intended to run on the host architecture
-%\item Typical usage: \textinline{"-DLLVM_ENABLE_PROJECTS=clang;lld;polly"}
-\end{itemize}
-\end{block}
-\end{column}
-\begin{column}{0.48\textwidth}
-\begin{block}{LLVM\_ENABLE\_RUNTIMES}
-\begin{itemize}
-\item Compiled using just-built Clang
-\item Use separate CMake build-dir nested inside LLVM build-dir
-\item Intended to be used by binaries compiled by Clang
-  \begin{itemize}
-  \item Can be a different architecture (cross-compilation)
-  \end{itemize}
-%\item Typical usage: \textinline{"-DLLVM_ENABLE_RUNTIMES=compiler-rt;libc;libcxx;openmp"}
-\end{itemize}
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{The Mechanism}
-
-\begin{frame}[fragile,shrink=33]{How does it work?}
-\framesubtitle{CMake step}
-
-\noindent\begin{columns}[t]
-\begin{column}{0.44\textwidth}
-\begin{block}{LLVM\_ENABLE\_PROJECTS}
-\begin{enumerate}
-\item For each enabled project, \textinline{add_subdirectory(llvm-sourcedir/<project>)}
-\end{enumerate}
-\end{block}
-\end{column}
-\begin{column}{0.02\textwidth}
-\end{column}
-\begin{column}{0.54\textwidth}
-\begin{block}{LLVM\_ENABLE\_RUNTIMES}
-\begin{enumerate}
-\item Add build targets:\\
-  \textinline{runtimes}, \textinline{install-runtimes}, \textinline{<runtime>}, \textinline{check-<runtime>}, \textinline{install-<runtime>}, \dots
-\item For each target architecture, \\[0.4\baselineskip]
-\begin{adjustwidth}{-4ex}{0mm}
-\begin{minted}{text}
-llvm_ExternalProject_Add(runtimes ...)
-\end{minted}
-\end{adjustwidth}
-which executes
-\begin{adjustwidth}{-4ex}{0mm}
-\begin{minted}{sh}
-cmake -GNinja                                          \
-  -S llvm-sourcedir/runtimes                           \
-  -B llvm-builddir/runtimes/runtimes-bins              \
-  -DLLVM_BINARY_DIR=llvm-builddir                      \
-  -DCMAKE_{C,CXX}_COMPILER=llvm-builddir/bin/clang{++} \
-  -DCMAKE_{C,CXX}_COMPILER_WORKS=YES                   \
-  "-DLLVM_ENABLE_RUNTIMES=<runtimes>"
-\end{minted}
-\end{adjustwidth}
-    \begin{enumerate}
-    \item \textinline{find_package(LLVM)}, \textinline{find_package(Clang)}
-    \item Find tools such as \textinline{llvm-lit}, \textinline{FileCheck} in \textinline{llvm-builddir}
-    \item For each enabled runtime,
-        \textinline{add_subdirectory(llvm-sourcedir/<runtime>)}
-    \end{enumerate}
-\end{enumerate}
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile,shrink=33]{How does it work?}
-\framesubtitle{Ninja step}
-
-\noindent\begin{columns}[t]
-\begin{column}{0.44\textwidth}
-\begin{block}{LLVM\_ENABLE\_PROJECTS: \textinline{ninja <project>}}
-\begin{enumerate}
-  \item CMake ensured all necessary dependencies
-%  \item Targets can depend on \textinline{runtimes} (e.g., \textinline{check-openmp})
-\end{enumerate}
-\end{block}
-\end{column}
-\begin{column}{0.02\textwidth}
-\end{column}
-\begin{column}{0.54\textwidth}
-\begin{block}{LLVM\_ENABLE\_RUNTIMES: \textinline{ninja <runtime>}}
-\begin{enumerate}
-  \item Build dependencies such as \textinline{clang}, \textinline{FileCheck}, etc
-  \item Run configure step for runtimes
-  \item Build dependencies for runtimes
-  \item Execute\\[0.4\baselineskip]
-\begin{adjustwidth}{-4ex}{0mm}
-\begin{minted}{sh}
-ninja -C llvm-builddir/runtimes/runtime-bins <runtime>
-\end{minted}
-\end{adjustwidth}
-
-     \begin{enumerate}
-     \item Build selected runtime
-     \end{enumerate}
-\end{enumerate}
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Advanced Options}
-
-\begin{frame}[fragile]{Runtime Options}
-
-\begin{block}{Pass Options to Runtimes Build}
-\begin{minted}{sh}
-cmake ...                                                   \
-  -DCMAKE_CXX_FLAGS=-fmax-errors=1                          \
-  "-DRUNTIMES_CMAKE_ARGS=-DCMAKE_CXX_FLAGS=-ferror-limit=1"
-\end{minted}
-\begin{itemize}
-\item \textinline{-fmax-errors=1} is for gcc
-\item \textinline{-ferror-limit=1} is for clang
-\end{itemize}
-\end{block}
-
-\begin{block}{Multiarch \& Pass Arch-specific Options}
-\begin{minted}{sh}
-cmake ...                                                          \
-  "-DLLVM_RUNTIME_TARGETS=default;aarch64-linux-gnu"               \
-  "-DRUNTIMES_aarch64-linux-gnu_CMAKE_CXX_FLAGS=-march=cortex-a57"
-\end{minted}
-\begin{itemize}
-\item Will create one builddir per target
-\end{itemize}
-\end{block}
-\end{frame}
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile]{Standalone-Runtimes build}
-
-\begin{block}{CMake step}
-\begin{minted}{sh}
-cmake -GNinja llvm-srcdir/runtimes     \
-  -DLLVM_BINARY_DIR=llvm-builddir      \
-  "-DLLVM_ENABLE_RUNTIMES=<runtimes>"
-\end{minted}
-\begin{itemize}
-\item Projects (LLVM, Clang, \dots) compiled separately
-\item Uses default C/C++ compiler (e.g., gcc)
-\end{itemize}
-\end{block}
-
-\begin{block}{Ninja step}
-\begin{minted}{sh}
-ninja <runtime>
-ninja check-<runtime>
-\end{minted}
-\end{block}
-\end{frame}
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Legacy Flang Runtime}
-\subsection{Usage}
-
-\begin{frame}[fragile,shrink=10]{Legacy Flang Runtime}
-\framesubtitle{\textinline{flang/runtime/CMakeLists.txt}}
-
-\begin{block}{In-Tree build}
-\begin{itemize}
-\item Like a \textinline{LLVM_ENABLE_RUNTIMES} build:
-\begin{minted}{cmake}
-add_subdirectory(runtime)
-\end{minted}
-\end{itemize}
-\end{block}
-
-\begin{block}{Standalone build}
-\begin{minted}{sh}
-cmake llvm-srcdir/flang/runtime \
-  -DLLVM_DIR=...                \
-  -DCLANG_DIR=...               \
-  -DMLIR_DIR=...
-
-cmake llvm-srcdir/flang/lib/Decimal \
-  -DLLVM_DIR=...                    \
-  -DCLANG_DIR=...                   \
-  -DMLIR_DIR=...
-\end{minted}
-\end{block}
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{The Problem}
-
-\begin{frame}[fragile]{What is the Problem?}
-\begin{itemize}
-\item Inconsistent with other LLVM runtimes
-\item For cross-compilation targets, must compile each target in standalone build
-\item GPU offloading: Build auxiliary target runtime separately
-  \begin{itemize}
-  \item As done for openmp-offload, libc, compiler-rt, libcxx, \dots
-  \end{itemize}
-\item Standalone build does not include \shinline{iso_fortran_env_impl.f90}
-\item Source code shared with Flang and Runtime
-  \begin{itemize}
-  \item ABI assumed to be the same
-  \item Compile code and runtime code have different requirements\itemremark{E.g. runtime code must not link to C++ standard library}
-  \item No clear separation which file belongs where
-  \end{itemize}
-\item Compiled binary shared with Flang and Runtime
-  \begin{itemize}
-  \item Runtime built with different flags\itemremark{E.g. \shinline{-fno-lto}}
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{New Flang-RT}
-\subsection{Usage}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile,shrink=10]{Building Flang-RT}
-\begin{block}{Bootstrapping-Runtimes build}
-\begin{minted}{sh}
-cmake  -GNinja ../llvm                      \
-  "-DLLVM_ENABLE_PROJECTS=clang;mlir;flang" \
-  "-DLLVM_ENABLE_RUNTIMES=flang-rt"
-\end{minted}
-\end{block}
-
-\begin{block}{Standalone-Runtimes build}
-\begin{minted}{sh}
-cmake -GNinja llvm-srcdir/runtimes                 \
-  "-DLLVM_ENABLE_RUNTIMES=flang-rt"                \
-  -DLLVM_BINARY_DIR=llvm-builddir                  \
-  -DCMAKE_Fortran_COMPILER=llvm-builddir/bin/flang \
-  -DCMAKE_Fortran_COMPILER_WORKS=YES
-\end{minted}
-\begin{itemize}
-\item Flang must built from the same git SHA1\itemremark{No ABI contract}
-\item \shinline{CMAKE_Fortran_COMPILER_WORKS} because flang before the runtime is available cannot produce executables
-\end{itemize}
-\end{block}
-\end{frame}
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{The Difficulties}
-
-\begin{frame}[fragile]{Things that Must Continue Working}
-\begin{itemize}
-\item Shared library
-%  \begin{itemize}
-%  \item \shinline{-DBUILD_SHARED_LIBS=ON}
-%  \item Only possible with standalone build
-%  \end{itemize}
-\item Quad-precision \textinline{math.h} support
-  \begin{itemize}
-  \item gcc \shinline{libquadmath}
-  \item Native \cppinline{sizeof(long double) == 16} with \shinline{libm}
-  \item f128 suffix functions (like \cinline{sinf128}) in \shinline{libm}
-  \end{itemize}
-\item Conditional \textinline{REAL(16)} support in Flang
-\item Unittests
-  \begin{itemize}
-  \item GTest and \dquote{non-gtest} testing framework
-  \end{itemize}
-\item Windows static \shinline{.lib}
-  \begin{itemize}
-  \item LLVM emits libgcc-ABI function calls, requires \shinline{clang_rt.builtins.lib} at link-time
-  \item msvc ships \shinline{clang_rt.builtins-x86_64.a}, but not used by the driver (anymore)
-  \end{itemize}
-\item Experimental OpenMP-offload build
-\item Experimental CUDA build
-  \begin{itemize}
-  \item With \shinline{clang -x cuda} and \shinline{nvcc}
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile]{What were the difficulties?}
-\begin{itemize}
-\item Requires flang to compile\itemremark{Exactly one .f90 source file: \textinline{iso_fortran_env_impl.f90}}
-\item Flang is version-locked
-\item Shared library
-\item CUDA-Fortran library
-\item Quadmath support
-\item Experimental CUDA/OpenMP offloading support
-    \begin{itemize}
-    \item Creates fat libraries
-    \item Compiles .cpp files as CUDA/with \textinline{-fopenmp}
-    \item Must support nvcc and clang as CUDA compiler
-    \end{itemize}
-\item Moving files to flang-rt/
-\item Windows: requires \textinline{libclang_rt.builtins.lib}
-\item \cinline{LLVM_ENABLE_PER_TARGET_RUNTIME_DIR}
-    \begin{itemize}
-    \item Windows
-    \end{itemize}
-\item Non-modern CMake
-\end{itemize}
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{The Changes}
-
-\begin{frame}[fragile,shrink=17]{Library Names}
-
-\noindent\begin{columns}[t]
-\begin{column}{0.48\textwidth}
-\begin{block}{Old Library Names}
-\begin{itemize}
-\item \textinline{libFortranRuntime{.a,.so}}
-\item \textinline{libFortranDecimal{.a,.so}}
-\item \textinline{libFortranFloat128Math.a}
-\item \textinline{libCufRuntime_cuda_${version}{.a,.so}}
-\end{itemize}
-\end{block}
-\end{column}
-\begin{column}{0.04\textwidth}
-\end{column}
-\begin{column}{0.48\textwidth}
-\begin{block}{New Library Names}
-\begin{itemize}
-\item \textinline{libflang_rt.runtime{.a,.so}}
-\item[]
-\item \textinline{libflang_rt.quadmath.a}
-\item \textinline{libflang_rt.cuda_${version}{.a,.so}}
-\end{itemize}
-\end{block}
-\end{column}
-\end{columns}
-
-\bigskip
-
-\begin{itemize}
-\item Same scheme as Compiler-RT: \textinline{libclang_rt.<component>{.a,.so}}
-\item \textinline{libFortranDecimal} integrated into \textinline{libflang_rt.runtime}
-  \begin{itemize}
-  \item Decided by RFC
-  \item \textinline{libFortranCommon} also used by Flang
-  \item Made \shinline{flang} depend on \shinline{libcudart.so}
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile,shrink=15]{The Big Move}
-
-\begin{block}{Principles}
-\begin{itemize}
-\item Split some headers into a compiler- and a runtime part
-\item Definitions to \shinline{flang-rt/lib/$component/*.cpp}
-\item Non-private headers to \shinline{flang-rt/include/flang-rt/$component/*.h}%\itemremark{Use in unittest makes it non-private}
-\item Files used by both, Flang (the compiler) and Flang-RT (the runtime), remain in \shinline{flang/}
-\item Move \dquote{\texttt{Common}} files only used by Flang (the compiler) to \texttt{Support}
-  \begin{itemize}
-  \item Remaining shared components: \cinline{FortranDecimal}, \cinline{FortranCommon} (header-only), \cinline{FortranRuntime} (header-only), \cinline{FortranTesting}
-%  \item Would have preferred a stronger separation
-  \end{itemize}
-\end{itemize}
-\end{block}
-
-\begin{scalepar}{0.8}
-\begin{tightcenter}
-\begin{tabular}{ll}
-\textbf{Old} & \textbf{New} \\
-\cmidrule(lr){1-1} \cmidrule(lr){2-2}
-\shinline{flang/runtime/*.h}   & \shinline{flang-rt/include/runtime/*.h} \\
-\shinline{flang/runtime/*.cxx} & \shinline{flang-rt/lib/runtime/*.cpp}     \\
-\shinline{flang/runtime/Float128Math/*} & \shinline{flang-rt/lib/quadmath/*}     \\
-\shinline{flang/runtime/CUDA/*} & \shinline{flang-rt/lib/cuda/*}     \\
-\shinline{flang/include/flang/Runtime/*.h} & \shinline{flang/include/flang/Runtime/*.h}      \\
-\shinline{flang/include/flang/Common/*.h}\footnotemark[1] & \shinline{flang/include/flang/Support/*.h}       \\
-\shinline{flang/unittests/Evaluate/{fp-}testing.h} & \shinline{flang/include/flang/Testing/*.h}   \\
-\shinline{flang/lib/Common/*.cpp} & \shinline{flang/lib/Support/*.cpp}       \\
-\shinline{flang/unittests/Evaluate/{fp-}testing.cpp} & \shinline{flang/lib/Testing/*.cpp}      \\
-\shinline{flang/test/**/*}\footnotemark[2] & \shinline{flang-rt/test/**/*.cpp}   \\
-\shinline{flang/unittests/**/*.cpp}\footnotemark[2] & \shinline{flang-rt/unittests/**/*.cpp}   \\
-\end{tabular}
-\end{tightcenter}
-\end{scalepar}
-
-
-% \footnotetext[1]{If only used by Flang (the compiler)}
-%  \footnotetext[2]{If only used by Flang-RT (the runtime)}
-\end{frame}
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile,shrink=18]{LLVM\_ENABLE\_PER\_TARGET\_RUNTIME\_DIR}
-\begin{block}{Library Location}
-\begin{itemize}
-\item Old Flang Runtime:\\\shinline{${CMAKE_INSTALL_PREFIX}/lib/libflang_rt.runtime.a}
-  \begin{itemize}
-  \item Clash in multiarch/cross-compile scenarios
-  \end{itemize}
-\item \textinline{LLVM_ENABLE_PER_TARGET_RUNTIME_DIR=OFF}:\\\shinline{${CMAKE_INSTALL_PREFIX}/lib/clang/$version/lib/$os/libclang_rt.buildins-$arch.a}
-  \begin{itemize}
-  \item Windows, Apple, AIX
-  \end{itemize}
-\item \textinline{LLVM_ENABLE_PER_TARGET_RUNTIME_DIR=ON}:\\\shinline{${CMAKE_INSTALL_PREFIX}/lib/clang/$version/lib/$triple/libclang_rt.builtins.a}
-  \begin{itemize}
-  \item Became default for Linux in Clang 19 (Now also BSD, OS390)
-  \item Assumptions leaking into \textinline{LLVM_ENABLE_PER_TARGET_RUNTIME_DIR=OFF} as well \dSadey  %\Sadey \Xey
-  \end{itemize}
-\end{itemize}
-\end{block}
-
-\bigskip
-
-\begin{itemize}
-\item Only the last supported for flang-rt
-  \begin{itemize}
-  \item \shinline{${CMAKE_INSTALL_PREFIX}/lib/clang/$version/lib/$triple/libflang_rt.<component>{.a,.so}}
-  \item \textinline{LLVM_ENABLE_PER_TARGET_RUNTIME_DIR} ignored
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile]{Shared Library}
-
-\begin{itemize}
-\item Old scheme: \cinline{BUILD_SHARED_LIBS=ON}
-  \begin{itemize}
-  \item Requires a second standalone build
-  \end{itemize}
-\item New scheme: Build static+shared library at the same time using \emph{object libraries}
-  \begin{itemize}
-  \item Done by (almost) every other runtime
-  \end{itemize}
-\end{itemize}
-
-\medskip
-
-\begin{block}{CMake Options}
-\begin{itemize}
-\item \cinline{FLANG_RT_ENABLE_STATIC}
-  \begin{itemize}
-  \item Default: \cinline{ON}
-  \end{itemize}
-\item \cinline{FLANG_RT_ENABLE_SHARED}
-  \begin{itemize}
-  \item Default: \cinline{OFF}\itemremark{ld prefers \shinline{.so} over \shinline{.a}, enabling it would be a breaking change}
-  \end{itemize}
-\end{itemize}
-\end{block}
-\end{frame}
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile,shrink=10]{Experimental GPU Target Support}
-
-\begin{block}{CUDA}
-\begin{itemize}
-\item \textbf{clang}: Compile everything with \shinline{-x cuda}
-\item \textbf{nvcc}: Treats everything as CUDA source
-\item Requires libcudac++ (libc++ for CUDA), cannot use \cinline{<variant>} or \cinline{<optional>}
-\item Declarations must be annotated with \cinline{__host__ __device__}
-\end{itemize}
-\end{block}
-
-\begin{block}{OpenMP}
-\begin{itemize}
-\item Compile everything with \shinline{-fopenmp --offload-arch}
-\item Declarations must be annotated with \cinline{#pragma declare target}
-\end{itemize}
-\end{block}
-
-
-\begin{itemize}
-\item Annotations selected with preprocessor macro \cinline{RT_API_ATTRS}
-\item Results in a \emph{fat library}
-  \begin{itemize}
-  \item Host and device code in a single file
-  \item For AMD/OpenMP we would rather compile them separately
-    \begin{itemize}
-    \item Multiarch library with device code looked up when launching kernels
-    \end{itemize}
-  \end{itemize}
-\end{itemize}
-
-\end{frame}
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Remaining Work}
-\subsection{TODOs}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile]{To Do Items}
-\begin{itemize}
-\item Flang is not (yet) a cross-compiler\itemremark{Sometimes assumes ABI of host platform, e.g., \cinline{sizeof(long)}}
-\item Compile builtin modules in the runtimes build using CMake
-    \begin{itemize}
-    \item OpenMP's modules as well
-    \item Per-target modules
-    \end{itemize}
-\item Flang's Quadmath support must not depend on LLVM build environment
-\item Multilib support
-\item Shared library location
-\item Library versioning
-\end{itemize}
-\end{frame}
-
-
-\end{comment}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1775,7 +1183,7 @@ cmake -GNinja llvm-srcdir/runtimes                 \
 \setcounter{lastslidenum}{\theframenumber}
 
 \begin{frame}{Disclaimer}
-\begin{scalepar}{0.7}
+\begin{scalepar}{0.65}
 The information presented in this document is for informational purposes only and may contain technical 
 inaccuracies, omissions, and typographical errors. The information contained herein is subject to change 
 and may be rendered inaccurate for many reasons, including but not limited to product and roadmap 
@@ -1802,18 +1210,15 @@ AMD, the AMD Arrow logo, and combinations thereof are trademarks of Advanced Mic
 names used in this publication are for identification purposes only and may be trademarks of their 
 respective companies. 
 
+\medskip 
+
+LLVM is a trademark of LLVM Foundation. The OpenMP name and the OpenMP logo are registered trademarks of the OpenMP Architecture Review Board.
+Other names used herein are for identification purposes only and may be 
+trademarks of their respective companies
+
 \medskip
 
-© 2026 Advanced Micro Devices, Inc. All rights reserved.
-
-%\bigskip
-%
-%Third-party content is licensed to you directly by the third party that owns the content and is 
-%not licensed to you by AMD. ALL LINKED THIRD-PARTY CONTENT IS PROVIDED “AS IS” 
-%WITHOUT A WARRANTY OF ANY KIND. USE OF SUCH THIRD-PARTY CONTENT IS DONE AT 
-%YOUR SOLE DISCRETION AND UNDER NO CIRCUMSTANCES WILL AMD BE LIABLE TO YOU FOR 
-%ANY THIRD-PARTY CONTENT. YOU ASSUME ALL RISK AND ARE SOLELY RESPONSIBLE FOR ANY 
-%DAMAGES THAT MAY ARISE FROM YOUR USE OF THIRD-PARTY CONTENT. 
+\textcopyright 2026 Advanced Micro Devices, Inc. All rights reserved.
 \end{scalepar}
 \end{frame}
 
