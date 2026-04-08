@@ -477,10 +477,10 @@
 \defbeamertemplate*{footline}{mytheme}
 {%
 % The lug that moves as the presentation progresses
-%\begin{tikzpicture}[overlay,remember picture]%
-%\pgfmathparse{min(1.1,(\insertpagenumber-\insertpresentationstartpage)/(\myinsertpresentationendpage-1))}%
-%\path[draw=gray] (page cs:x={\pgfmathresult},y=1) -- +(0,1mm);%
-%\end{tikzpicture}%
+\begin{tikzpicture}[overlay,remember picture]%
+\pgfmathparse{min(1.1,(\insertpagenumber-\insertpresentationstartpage)/(\myinsertpresentationendpage-1))}%
+\path[draw=gray] (page cs:x={\pgfmathresult},y=1) -- +(0,1mm);%
+\end{tikzpicture}%
 %
 %
 % 'nextsub' is the index of the subsection we are LOOKING FOR
@@ -506,10 +506,9 @@
       \hspace*{3mm}%
       \usebeamerfont{date in head/foot}
         \ifnum\thepage=\numexpr\nextsubpage-1\relax% If last slide in the subsection
-               \insertframenumber{}% 
 %
 % The marker that this is the last overlay of frame  
-%              \begin{minipage}{0pt}{\hspace*{-1.5em}\textcolor{gray}{\textbullet}}\end{minipage}\insertframenumber{}
+              \begin{minipage}{0pt}{\hspace*{-1.5em}\textcolor{gray}{\textbullet}}\end{minipage}\insertframenumber{}
 %
         \else%
               \insertframenumber{}% / \insertpresentationendframe{}
@@ -527,21 +526,6 @@
 
 
 
-
-
-%\usepackage{regexpatch}
-%
-%\xpatchcmd{\itemize}
-%  {\def\makelabel}
-%  {\setlength{\itemsep}{0.6ex}\def\makelabel}
-%  {}
-%  {}
-%
-%\xpatchcmd{\enumerate}
-%  {\def\makelabel}
-%  {\setlength{\itemsep}{0.6ex}\def\makelabel}
-%  {}
-%  {}
 
 
 
