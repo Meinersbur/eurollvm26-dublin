@@ -1080,14 +1080,48 @@ for tree={dirtree}
 \end{frame}
 
 
-\begin{comment}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[fragile]{check-compiler-rt} 
+\begin{frame}[fragile]{Compiler-RT Builtins} 
 
+%\begin{itemize}
+%\item \textinline{clang}
+%\item \textinline{builts-confir}
+%\end{itemize}
+\begin{scalepar}{0.9}
+\begin{tightcenter}
+\begin{tikzpicture}
+\tikzset{node/.style={}}
+\tikzset{metanode/.style={draw=white,line width=1.2pt,rounded corners}}
+\tikzset{supernode/.style={draw=white,line width=1.2pt,rounded corners}}
+\tikzset{edge/.style={->}}
+
+\graph[layered layout,edges={edge,rounded corners},level sep=5mm,sibling sep=3mm,grow=down]{
+%
+%action [subgraph text none] {
+  clang[node,as={\texttt{clang}}];
+  FileCheck[node,as={\texttt{FileCheck}}];
+  not[node,as={\texttt{not}}];
+  dots[node,as={\dots}];
+  builtins_configure[metanode,as={\texttt{builtins-configure}}];
+  builtins_build[metanode,as={\texttt{builtins-build}}];
+  runtimes_configure[metanode,as={\texttt{runtimes-configure}}];
+  runtimes_build[metanode,as={\texttt{runtimes-build}}];
+  check_compilert_rt[node,as={\shinline{ninja -C runtimes/runtimes/bins check-compiler-rt}}];
+%
+  {clang, FileCheck, not, dots} -> builtins_configure -> builtins_build -> runtimes_configure -> runtimes_build -> check_compilert_rt;
+%
+%};
+};
+\node[fit={(clang) (dots) (check_compilert_rt)},supernode,inner sep=4mm,label={[font=\Large\ttfamily]above:check-compiler-rt}]{};
+%
+\end{tikzpicture}
+\end{tightcenter}
+\end{scalepar}
 \end{frame}
-\end{comment}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Step ?}
